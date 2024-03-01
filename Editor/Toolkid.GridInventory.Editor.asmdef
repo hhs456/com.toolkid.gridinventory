@@ -1,0 +1,18 @@
+{
+    "name": "Toolkid.GridInventory.Editor",
+    "rootNamespace": "Toolkid.GridInventory",
+    "references": [
+        "GUID:b7e115a1f5041094ab62dce762c47cac"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
