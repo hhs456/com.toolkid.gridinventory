@@ -16,4 +16,4 @@
 
 #### 結果
 
-![Grid Drawer](https://github.com/hhs456/com.toolkid.gridinventory/blob/main/Description/Grid Drawer.gif)
+![Grid Drawer](https://github.com/hhs456/com.toolkid.gridinventory/blob/main/Description/GridDrawer.gif)
