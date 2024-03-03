@@ -37,6 +37,6 @@ public class PlaceablesDataDrawer : PropertyDrawer
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-        return EditorGUI.GetPropertyHeight(property, label) + 5 * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2f);
+        return EditorGUI.GetPropertyHeight(property, label) + 3 * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2f);
     }
 }

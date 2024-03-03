@@ -37,11 +37,18 @@ namespace Toolkid.GridInventory {
             return isOutArea;
         }
 
-        public bool TryArea(Vector2Int index, Vector2Int cell) {
+        public Vector2Int GetIndex(Vector2Int index, Vector2Int cell) {
             int horizontalPosition = enableOriginRight ? index.x - cell.x : index.x + cell.x;
             int verticalPosition = enableOriginTop ? index.y - cell.y : index.y + cell.y;
 
-            return TryArea(new Vector2Int(horizontalPosition, verticalPosition));
+            return new Vector2Int(horizontalPosition, verticalPosition);
+        }
+
+        public int GetOrder(Vector2Int index, Vector2Int cell) {
+            int horizontalPosition = enableOriginRight ? index.x - cell.x : index.x + cell.x;
+            int verticalPosition = enableOriginTop ? index.y - cell.y : index.y + cell.y;
+
+            return verticalPosition * GridCount.x + horizontalPosition;
         }
 
         public void Initialize() {            

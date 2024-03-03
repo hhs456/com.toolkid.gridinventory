@@ -23,16 +23,15 @@ public class Placeables : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     }
 
     public void OnDrag(PointerEventData eventData) {
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(InventoryManager.Current.GridSystem.Rect, eventData.position, Camera.main, out Vector3 maskPos);
-        InventoryManager.Current.OnHover(maskPos);             
-        m_dragging.transform.position = maskPos;
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(InventoryManager.Current.GridSystem.Rect, eventData.position, Camera.main, out Vector3 cursorPos);
+        InventoryManager.Current.OnHover(cursorPos);             
+        m_dragging.transform.position = cursorPos;
     }
 
     public void OnEndDrag(PointerEventData eventData) {
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(InventoryManager.Current.GridSystem.GetComponent<RectTransform>(), eventData.position, Camera.main, out Vector3 maskPos);
-        InventoryManager.Current.OnHover(maskPos);
-        DestroyImmediate(m_dragging.gameObject);
-        InventoryManager.Current.OnPlace();
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(InventoryManager.Current.GridSystem.GetComponent<RectTransform>(), eventData.position, Camera.main, out Vector3 cursorPos);        
+        InventoryManager.Current.OnPlace(cursorPos);
+        DestroyImmediate(m_dragging.gameObject);        
         OnDragEnd?.Invoke(this, eventData);
     }
 }
