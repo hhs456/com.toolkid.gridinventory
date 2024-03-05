@@ -12,19 +12,26 @@ public class InventoryManager : MonoBehaviour
     public static InventoryManager Current { get; set; }
     public GridSystem GridSystem { get => m_GridSystem; }
     public GridDrawer GridDrawer { get => m_GridDrawer; }
+    public StackablesManager Stackables { get => m_Stackables; }
     public bool IsPlaceable { get => m_IsPlaceable; }
 
     [SerializeField] private GridDrawer m_GridDrawer;
     [SerializeField] private GridSystem m_GridSystem;
     [SerializeField] private GameObject m_SlotPrefab;
+    [SerializeField] private StackablesManager m_Stackables;
+    [SerializeField] private PlaceablesDatas m_Placeables;
     List<SlotData> slots = new List<SlotData>();
 
     [SerializeField] bool m_IsPlaceable = false;
+
+    public Dictionary<int, PlaceablesData> Placeables { get => m_Placeables.Datas; }
 
     void OnEnable() {
         Current = this;
         GridSystem.Initialize();
         GridDrawer.Initialize();
+        m_Placeables.Initialize();
+        m_Stackables.Initialize();
         slots.Clear();
         for (int i = 0; i < GridSystem.GridCount.y; i++) {            
             for (int j = 0; j < GridSystem.GridCount.x; j++) {
