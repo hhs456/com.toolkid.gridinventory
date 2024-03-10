@@ -25,7 +25,7 @@ public class InventoryManager : MonoBehaviour
 
     public Dictionary<int, PlaceablesData> Placeables { get => m_Placeables.Datas; }
 
-    void OnEnable() {
+    void Start() {
         Current = this;
         GridSystem.Initialize();
         GridDrawer.Initialize();

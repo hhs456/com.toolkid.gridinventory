@@ -15,7 +15,8 @@ public class StackablesManager : MonoBehaviour
     Stackables[] stackables;
     List<SlotData> slots = new List<SlotData>();
 
-    public void OnEnable() {        
+    // Must be Start(), because the size of adaptive canvas initialized on enabled.
+    public void Start() {        
         //stackables = GetComponentsInChildren<Stackables>();
         //foreach (Stackables stackable in stackables) {
         //    stackable.Initialize();
