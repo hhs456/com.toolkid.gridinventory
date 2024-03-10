@@ -11,8 +11,11 @@ This repository provides a grid-based inventory system implemented using Unity's
 1. Add `Placeables` to the inventory object.
 2. Click on the grid square you want to configure (currently limited to a size of 5×5).
 3. Utilize scripts to call relevant methods from `InventoryManager`.
+4. Setup `Grid` parammeters by `GridSystem` on **Inspector**.
 
-![Inspector](https://github.com/hhs456/com.toolkid.gridinventory/blob/main/Description/Inspector.jpg)
+![Inventory Manager](https://github.com/hhs456/com.toolkid.gridinventory/blob/main/Description/Inspector.jpg)
+
+![Grid Settings](https://github.com/hhs456/com.toolkid.gridinventory/blob/main/Description/GridSettings.jpg)
 
 ### Result
 

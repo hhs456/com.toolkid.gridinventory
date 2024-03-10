@@ -32,6 +32,7 @@ public class StackablesManager : MonoBehaviour
                 slots[slots.Count - 1].Image.transform.position = GridSystem.GetWorldPosition(new Vector2Int(j, i));
                 slots[slots.Count - 1].Image.transform.localScale = Vector3.one;                
                 slots[slots.Count - 1].Image.GetComponent<Stackables>().Initialize(j); // `j` is order in array, only for testing version.
+                slots[slots.Count - 1].Image.GetComponent<Placeables>().Initialize(j);
             }
         }
     }

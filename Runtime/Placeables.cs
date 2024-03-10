@@ -11,6 +11,11 @@ namespace Toolkid.GridInventory {
         public event EventHandler<PointerEventData> OnDragBegin;
         public event EventHandler<PointerEventData> OnDragEnd;
 
+        // Only for testing version.
+        public void Initialize(int itemID) {
+            m_ObjectID = itemID;
+        }
+
         public void OnBeginDrag(PointerEventData eventData) {
             m_dragging = Instantiate(m_Image.gameObject, InventoryManager.Current.GridDrawer.transform.parent);
             Canvas canvas = m_dragging.AddComponent<Canvas>();
