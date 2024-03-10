@@ -32,11 +32,14 @@ namespace Toolkid.GridInventory {
             InventoryManager.Current.OnPlace(cursorPos);
             DestroyImmediate(m_dragging.gameObject);
             OnDragEnd?.Invoke(this, eventData);
-            if(eventData.pointerCurrentRaycast.gameObject.TryGetComponent(out Stackables pointed)) {
-                if(pointed.Data.ID == m_ObjectID) {
+            var pointer = eventData.pointerCurrentRaycast.gameObject;
+            if (pointer) {
+                if (pointer.TryGetComponent(out Stackables pointed)) {
+                    if (pointed.Data.ID == m_ObjectID) {
 
+                    }
+                    // Stacks Behaviour
                 }
-                // Stacks Behaviour
             }
             
         }

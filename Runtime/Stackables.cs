@@ -10,7 +10,8 @@ namespace Toolkid.GridInventory {
         
         public StackablesData Data { get => m_Data; set => m_Data = value; }
 
-        public void Initialize() {
+        public void Initialize(int itemID) {
+            m_ItemID = itemID;
             m_Data.Name = InventoryManager.Current.Placeables[m_ItemID].Name;
             m_Text.text = m_Data.Name;
         }
