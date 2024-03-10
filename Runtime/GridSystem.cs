@@ -55,9 +55,9 @@ namespace Toolkid.GridInventory {
             m_PositionOffset = new Vector2Int(GridCount.x / 2, GridCount.y / 2);
             Vector2 canvasSize = Rect.rect.size;
             Grid.cellSize = new Vector3(canvasSize.x / GridCount.x, canvasSize.y / GridCount.y, 0);
-            float x_offset = GridCount.x % 2 == 0 ? canvasSize.x % Grid.cellSize.x : Grid.cellSize.x / 2;
+            float x_offset = GridCount.x % 2 == 0 ? 0 : Grid.cellSize.x / 2;
             x_offset = enableOriginRight ? x_offset : -x_offset;
-            float y_offset = GridCount.y % 2 == 0 ? canvasSize.y % Grid.cellSize.y : Grid.cellSize.y / 2;
+            float y_offset = GridCount.y % 2 == 0 ? 0 : Grid.cellSize.y / 2;
             y_offset = enableOriginTop ? y_offset : -y_offset;
             grid.transform.localPosition = new Vector3(grid.transform.localPosition.x + x_offset, grid.transform.localPosition.y + y_offset, 0);
         }
