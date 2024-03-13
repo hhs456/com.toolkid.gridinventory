@@ -1,6 +1,5 @@
 {
-    "name": "Toolkid.GridInventory.Editor",
-    "rootNamespace": "Toolkid.GridInventory",
+    "name": "Toolkid.UIGrid.Editor",
     "references": [
         "GUID:b7e115a1f5041094ab62dce762c47cac"
     ],

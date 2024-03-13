@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     public class GridCell {
         public RawImage skin;        
         public Vector2Int nativeCell;

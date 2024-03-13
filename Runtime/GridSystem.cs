@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
 
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     public class GridSystem : MonoBehaviour {
         public RectTransform Rect { get => rect; }
         public Grid Grid { get => grid; }
@@ -14,9 +14,6 @@ namespace Toolkid.GridInventory {
         [SerializeField] private Vector2Int m_GridCount = new Vector2Int(6, 6);
 
         [SerializeField] private Corner startCorner;
-
-        public bool enableOriginTop = false;
-        public bool enableOriginRight = false;
 
         private Vector2Int m_PositionOffset;        
 

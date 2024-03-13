@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     public class Stackables : MonoBehaviour {
         [SerializeField] int m_ItemID;
         [SerializeField] StackablesData m_Data = new StackablesData();

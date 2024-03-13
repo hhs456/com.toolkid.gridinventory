@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     public class GridValidator : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
         [SerializeField] private InventoryManager m_InventoryManager;
         [SerializeField] private GridSystem m_GridSystem;

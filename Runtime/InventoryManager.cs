@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.ComTypes;
-using Toolkid.GridInventory;
+using Toolkid.UIGrid;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;

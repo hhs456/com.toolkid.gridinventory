@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     [CreateAssetMenu(fileName = "Placeables Datas", menuName = "Placeables Datas")]
     public class PlaceablesDatas : ScriptableObject {
         [SerializeField] private PlaceablesData[] datas;

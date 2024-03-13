@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     [CustomEditor(typeof(GridSystem))]
     public class GridSystemEditor : Editor {
         public override void OnInspectorGUI() {

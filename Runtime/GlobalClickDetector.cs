@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     public class GlobalClickDetector<T> where T : MonoBehaviour {
         T target;
         Predicate<T> match;

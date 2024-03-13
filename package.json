@@ -1,6 +1,6 @@
 {
-  "name": "com.toolkid.gridinventory",
-  "displayName": "Toolkid.GridInventory",
+  "name": "com.toolkid.uigrid",
+  "displayName": "Toolkid.UIGrid",
   "version": "0.0.0",
   "unity": "2019.4",
   "description": "This is a toolkit to contorl Grid component.",

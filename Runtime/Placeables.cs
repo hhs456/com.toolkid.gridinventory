@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     public class Placeables : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler {
         [SerializeField] GameObject m_dragging;
         [SerializeField] RawImage m_Image;

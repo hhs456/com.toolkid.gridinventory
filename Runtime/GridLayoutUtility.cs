@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using static UnityEngine.UI.GridLayoutGroup;
 
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     public static class GridLayoutUtility {
         public static int ToInt(this Vector2Int index, Vector2Int cell, Corner startCorner, int columnCount) {
             int x = -1;

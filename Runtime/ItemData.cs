@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     [Serializable]
     public abstract class ItemData
     {

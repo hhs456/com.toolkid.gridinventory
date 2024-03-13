@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace Toolkid.GridInventory {
+namespace Toolkid.UIGrid {
     [Serializable]
     public class StackablesData : ItemData {        
         [SerializeField] protected int m_Count = 0;
