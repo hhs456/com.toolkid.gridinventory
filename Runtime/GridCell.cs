@@ -2,14 +2,15 @@
 using UnityEngine.UI;
 namespace Toolkid.GridInventory {
     public class GridCell {
-        public Image skin;
-        public Vector2Int position;
+        public RawImage skin;        
+        public Vector2Int nativeCell;
+        public Vector2Int inventoryIndex;
 
-        public GridCell(Image skin) {
+        public GridCell(RawImage skin) {
             this.skin = skin;
         }
         public void SetCell(Vector2Int cell) {
-            this.position = cell;
+            this.nativeCell = cell;
         }
         public void SetSkin(bool enable) {
             skin.enabled = enable;

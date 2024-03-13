@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
+﻿using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Toolkid.GridInventory {
     public class GridSystem : MonoBehaviour {
@@ -10,10 +7,13 @@ namespace Toolkid.GridInventory {
         public Grid Grid { get => grid; }
         public Vector2Int PositionOffset { get => m_PositionOffset; }
         public Vector2Int GridCount { get => m_GridCount; }
+        public Corner StartCorner { get => startCorner; set => startCorner = value; }
 
         [SerializeField] private RectTransform rect;
         [SerializeField] private Grid grid;
         [SerializeField] private Vector2Int m_GridCount = new Vector2Int(6, 6);
+
+        [SerializeField] private Corner startCorner;
 
         public bool enableOriginTop = false;
         public bool enableOriginRight = false;
@@ -37,63 +37,108 @@ namespace Toolkid.GridInventory {
             return isOutArea;
         }
 
-        public Vector2Int GetIndex(Vector2Int index, Vector2Int cell) {
-            int horizontalPosition = enableOriginRight ? index.x - cell.x : index.x + cell.x;
-            int verticalPosition = enableOriginTop ? index.y - cell.y : index.y + cell.y;
-
-            return new Vector2Int(horizontalPosition, verticalPosition);
+        public Vector2Int GetIndex(Vector2Int center, Vector2Int relative) {
+            int x = center.x + relative.x;
+            int y = center.y + relative.y;
+            switch (startCorner) {
+                case Corner.UpperLeft:
+                    y = center.y - relative.y;
+                    break;
+                case Corner.UpperRight:
+                    y = center.y - relative.y;
+                    x = center.x - relative.x;
+                    break;
+                case Corner.LowerLeft:
+                    break;
+                case Corner.LowerRight:
+                    x = center.x - relative.x;
+                    break;
+                default:
+                    break;
+            }
+            return new Vector2Int(x, y);
         }
 
         public int GetOrder(Vector2Int index, Vector2Int cell) {
-            int horizontalPosition = enableOriginRight ? index.x - cell.x : index.x + cell.x;
-            int verticalPosition = enableOriginTop ? index.y - cell.y : index.y + cell.y;
-
-            return verticalPosition * GridCount.x + horizontalPosition;
+            return index.ToInt(cell, startCorner, GridCount.x);
         }
 
         public void Initialize() {            
             m_PositionOffset = new Vector2Int(GridCount.x / 2, GridCount.y / 2);
             Vector2 canvasSize = Rect.rect.size;
             Grid.cellSize = new Vector3(canvasSize.x / GridCount.x, canvasSize.y / GridCount.y, 0);
-            float x_offset = GridCount.x % 2 == 0 ? 0 : Grid.cellSize.x / 2;
-            x_offset = enableOriginRight ? x_offset : -x_offset;
-            float y_offset = GridCount.y % 2 == 0 ? 0 : Grid.cellSize.y / 2;
-            y_offset = enableOriginTop ? y_offset : -y_offset;
+            float x_offset = GridCount.x % 2 == 0 ? 0 : Grid.cellSize.x / 2;            
+            float y_offset = GridCount.y % 2 == 0 ? 0 : Grid.cellSize.y / 2;            
+            switch (startCorner) {
+                case Corner.UpperLeft:
+                    x_offset = -x_offset;
+                    break;
+                case Corner.UpperRight:
+                    break;
+                case Corner.LowerLeft:
+                    x_offset = -x_offset;
+                    y_offset = -y_offset;
+                    break;
+                case Corner.LowerRight:
+                    y_offset = -y_offset;
+                    break;
+                default:
+                    break;
+            }
             grid.transform.localPosition = new Vector3(grid.transform.localPosition.x + x_offset, grid.transform.localPosition.y + y_offset, 0);
         }
 
         public Vector3 GetCellCenterWorld(Vector3 position) {
-            Vector2Int gridIndex = GetIndex(position);
-            int horizontalPosition = gridIndex.x - PositionOffset.x;
-            horizontalPosition = enableOriginRight ? -(gridIndex.x - PositionOffset.x) - 1 : horizontalPosition;
-            int verticalPosition = gridIndex.y - PositionOffset.y;
-            verticalPosition = enableOriginTop ? -(gridIndex.y - PositionOffset.y) - 1 : verticalPosition;
-
-            Vector3Int placePos = new Vector3Int(horizontalPosition, verticalPosition, 0);
-            return Grid.GetCellCenterWorld(placePos);
+            Vector2Int gridIndex = GetIndex(position);            
+            return GetWorldPosition(gridIndex);
         }
 
         public Vector3 GetWorldPosition(Vector2Int cell) {
-            int horizontalPosition = cell.x - PositionOffset.x;
-            horizontalPosition = enableOriginRight ? -(cell.x - PositionOffset.x) - 1 : horizontalPosition;
-            int verticalPosition = cell.y - PositionOffset.y;
-            verticalPosition = enableOriginTop ? -(cell.y - PositionOffset.y) - 1 : verticalPosition;
+            int x = cell.x - PositionOffset.x;
+            int y = cell.y - PositionOffset.y;
+            switch (startCorner) {
+                case Corner.UpperLeft:
+                    y = -y - 1;
+                    break;
+                case Corner.UpperRight:
+                    x = -x - 1;
+                    y = -y - 1;
+                    break;
+                case Corner.LowerLeft:
+                    break;
+                case Corner.LowerRight:
+                    x = -x - 1;
 
-            Vector3Int placePos = new Vector3Int(horizontalPosition, verticalPosition, 0);
+                    break;
+                default:
+                    break;
+            }
+
+            Vector3Int placePos = new Vector3Int(x, y, 0);
             return Grid.GetCellCenterWorld(placePos);
         }
 
         public Vector2Int GetIndex(Vector3 position) {
             Vector3Int cellPos = Grid.WorldToCell(position);
-            int horizontalPosition = cellPos.x + PositionOffset.x;
-            if (enableOriginRight) {
-                horizontalPosition = GridCount.x - horizontalPosition - 1;
+            int x = cellPos.x + PositionOffset.x;            
+            int y = cellPos.y + PositionOffset.y;            
+            switch (startCorner) {
+                case Corner.UpperLeft:
+                    y = GridCount.y - y - 1;
+                    break;
+                case Corner.UpperRight:
+                    x = GridCount.x - x - 1;
+                    y = GridCount.y - y - 1;
+                    break;
+                case Corner.LowerLeft:
+                    break;
+                case Corner.LowerRight:
+                    x = GridCount.x - x - 1;
+                    break;
+                default:
+                    break;
             }
-            int verticalPosition = cellPos.y + PositionOffset.y;
-            if (enableOriginTop) {
-                verticalPosition = GridCount.y - verticalPosition - 1;
-            }
-            return new Vector2Int(horizontalPosition, verticalPosition);            
+            return new Vector2Int(x, y);            
         }
     }
 }

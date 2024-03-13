@@ -25,10 +25,10 @@ public class StackablesManager : MonoBehaviour
         slots.Clear();
         for (int i = 0; i < GridSystem.GridCount.y; i++) {
             for (int j = 0; j < GridSystem.GridCount.x; j++) {
-                SlotData slot = new SlotData(Instantiate(m_SlotPrefab).GetComponent<Image>());
+                SlotData slot = new SlotData(Instantiate(m_SlotPrefab).GetComponent<RawImage>());
                 slots.Add(slot);
                 slots[slots.Count - 1].Image.transform.localPosition = Vector3.zero;
-                slots[slots.Count - 1].Image.GetComponent<RectTransform>().sizeDelta = GridSystem.Grid.GetSizeInVector2() * 0.95f;
+                slots[slots.Count - 1].Image.GetComponent<RectTransform>().sizeDelta = GridSystem.Grid.Get2DSize() * 0.95f;
                 slots[slots.Count - 1].Image.transform.SetParent(transform);
                 slots[slots.Count - 1].Image.transform.position = GridSystem.GetWorldPosition(new Vector2Int(j, i));
                 slots[slots.Count - 1].Image.transform.localScale = Vector3.one;                

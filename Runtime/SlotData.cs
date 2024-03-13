@@ -4,24 +4,24 @@ using UnityEngine.UI;
 
 [Serializable]
 public class SlotData {
-    [SerializeField] private Sprite originTexture;
+    [SerializeField] private Texture originTexture;
     [SerializeField] private Color originColor;
-    [SerializeField] private Image m_Image;
+    [SerializeField] private RawImage m_Image;
     [SerializeField] private bool hasUsed = false;
     [SerializeField] private int centerIndex = -1;
 
-    public Image Image { get => m_Image; private set => m_Image = value; }
+    public RawImage Image { get => m_Image; private set => m_Image = value; }
 
     public bool HasUsed { get => hasUsed; private set => hasUsed = value; }
 
-    public SlotData (Image image) {
+    public SlotData (RawImage image) {
         Image = image;
-        originTexture = image.sprite;
+        originTexture = image.texture;
         originColor = image.color;
     }
 
     public void Reset() {
-        Image.sprite = originTexture;
+        Image.texture = originTexture;
         Image.color = originColor;
     }
 
@@ -29,8 +29,8 @@ public class SlotData {
         Image.color = color;
     }
 
-    public void SetData (Sprite skin) {
-        Image.sprite = skin;
+    public void SetData (Texture skin) {
+        Image.texture = skin;
     }
 
     public void SetData(int center) {

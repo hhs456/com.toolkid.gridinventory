@@ -1,12 +1,11 @@
 ﻿using System;
-using Toolkid.GridInventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 namespace Toolkid.GridInventory {
     public class Placeables : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler {
         [SerializeField] GameObject m_dragging;
-        [SerializeField] Image m_Image;
+        [SerializeField] RawImage m_Image;
         [SerializeField] int m_ObjectID;
         public event EventHandler<PointerEventData> OnDragBegin;
         public event EventHandler<PointerEventData> OnDragEnd;
@@ -34,7 +33,8 @@ namespace Toolkid.GridInventory {
 
         public void OnEndDrag(PointerEventData eventData) {
             RectTransformUtility.ScreenPointToWorldPointInRectangle(InventoryManager.Current.GridSystem.GetComponent<RectTransform>(), eventData.position, Camera.main, out Vector3 cursorPos);
-            InventoryManager.Current.OnPlace(cursorPos);
+            Vector2Int gridIndex = InventoryManager.Current.GridSystem.GetIndex(cursorPos);
+            InventoryManager.Current.GridDrawer.Placing(gridIndex);
             DestroyImmediate(m_dragging.gameObject);
             OnDragEnd?.Invoke(this, eventData);
             var pointer = eventData.pointerCurrentRaycast.gameObject;

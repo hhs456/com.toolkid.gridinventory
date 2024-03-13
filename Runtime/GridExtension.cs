@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class GridUtility {
-    public static Vector2 GetSizeInVector2(this Grid grid) {
+public static class GridExtension {
+    public static Vector2 Get2DSize(this Grid grid) {
         switch (grid.cellSwizzle) {
             case GridLayout.CellSwizzle.XYZ:
                 return new Vector2(grid.cellSize.x, grid.cellSize.y);
