@@ -21,7 +21,7 @@ namespace Toolkid.UIGrid {
             canvas.overrideSorting = true;
             canvas.sortingOrder = 2;
             m_dragging.transform.localPosition = Vector3.zero;
-            InventoryManager.Current.OnPlaceable(InventoryManager.Current.Placeables[m_ObjectID].Sharp);
+            InventoryManager.Current.OnPlaceable(PlaceablesDatas.Datas[m_ObjectID].Sharp);
             OnDragBegin?.Invoke(this, eventData);
         }
 
@@ -34,7 +34,7 @@ namespace Toolkid.UIGrid {
         public void OnEndDrag(PointerEventData eventData) {
             RectTransformUtility.ScreenPointToWorldPointInRectangle(InventoryManager.Current.GridSystem.GetComponent<RectTransform>(), eventData.position, Camera.main, out Vector3 cursorPos);
             Vector2Int gridIndex = InventoryManager.Current.GridSystem.GetIndex(cursorPos);
-            InventoryManager.Current.GridDrawer.Placing(gridIndex);
+            InventoryManager.Current.GridDrawer.PlaceOn(gridIndex);
             DestroyImmediate(m_dragging.gameObject);
             OnDragEnd?.Invoke(this, eventData);
             var pointer = eventData.pointerCurrentRaycast.gameObject;

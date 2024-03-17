@@ -12,7 +12,7 @@ namespace Toolkid.UIGrid {
 
         public void Initialize(int itemID) {
             m_ItemID = itemID;
-            m_Data.Name = InventoryManager.Current.Placeables[m_ItemID].Name;
+            m_Data.Name = PlaceablesDatas.Datas[m_ItemID].Name;
             m_Text.text = m_Data.Name;
         }
     }

@@ -23,8 +23,6 @@ public class InventoryManager : MonoBehaviour
 
     [SerializeField] bool m_IsPlaceable = false;
 
-    public Dictionary<int, PlaceablesData> Placeables { get => m_Placeables.Datas; }
-
     void Start() {
         Current = this;
         GridSystem.Initialize();
@@ -54,10 +52,10 @@ public class InventoryManager : MonoBehaviour
 
     public bool TryPlaceable(Vector2Int gridIndex) {
         bool isPlaceable = true;
-        foreach (var mask in GridDrawer.m_GridCells) {
+        foreach (var mask in GridDrawer.m_GridDatas) {
             mask.SetSkin(true);
-            Vector2Int index = GridSystem.GetIndex(gridIndex, mask.nativeCell);
-            int order = GridSystem.GetOrder(gridIndex, mask.nativeCell);
+            Vector2Int index = GridSystem.GetIndex(gridIndex, mask.NativeCell);
+            int order = GridSystem.GetOrder(gridIndex, mask.NativeCell);
             if (GridSystem.TryArea(index)) {
                 isPlaceable = false;
                 GridDrawer.Invalidate();
@@ -65,10 +63,10 @@ public class InventoryManager : MonoBehaviour
             }
         }
         if (isPlaceable) {
-            foreach (var mask in GridDrawer.m_GridCells) {
+            foreach (var mask in GridDrawer.m_GridDatas) {
                 mask.SetSkin(true);
-                Vector2Int index = GridSystem.GetIndex(gridIndex, mask.nativeCell);
-                int order = GridSystem.GetOrder(gridIndex, mask.nativeCell);
+                Vector2Int index = GridSystem.GetIndex(gridIndex, mask.NativeCell);
+                int order = GridSystem.GetOrder(gridIndex, mask.NativeCell);
                 if (slots[order].HasUsed) {
                     isPlaceable = false;
                     GridDrawer.Invalidate();
@@ -83,15 +81,15 @@ public class InventoryManager : MonoBehaviour
     }
 
     public void OnPlaceable(bool[] Sharp) {
-        GridDrawer.Enable(Sharp);
+        GridDrawer.Preview(Sharp);
     }
     public void OnPlace(Vector3 position) {
         Vector2Int gridIndex = GridSystem.GetIndex(position);
         int center = GridSystem.GetOrder(gridIndex, Vector2Int.zero);
-        foreach (var mask in GridDrawer.m_GridCells) {
+        foreach (var mask in GridDrawer.m_GridDatas) {
             if (IsPlaceable) {
                 mask.SetSkin(true);
-                int order = GridSystem.GetOrder(gridIndex, mask.nativeCell);
+                int order = GridSystem.GetOrder(gridIndex, mask.NativeCell);
                 slots[order].SetData(Color.gray);
                 slots[order].SetData(center);
             }
@@ -99,10 +97,10 @@ public class InventoryManager : MonoBehaviour
     }
     public void OnPlace(Vector2Int index) {        
         int center = GridSystem.GetOrder(index, Vector2Int.zero);
-        foreach (var mask in GridDrawer.m_GridCells) {
+        foreach (var mask in GridDrawer.m_GridDatas) {
             if (IsPlaceable) {
                 mask.SetSkin(true);
-                int order = GridSystem.GetOrder(index, mask.nativeCell);
+                int order = GridSystem.GetOrder(index, mask.NativeCell);
                 slots[order].SetData(Color.gray);
                 slots[order].SetData(center);
             }

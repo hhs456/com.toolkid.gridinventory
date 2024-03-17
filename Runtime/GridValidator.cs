@@ -16,7 +16,7 @@ namespace Toolkid.UIGrid {
         public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
         public Vector2Int Center { get => m_Center; set => m_Center = value; }
 
-        public readonly List<GridCell> m_GridCells = new List<GridCell>();
+        public readonly List<GridData> m_GridDatas = new List<GridData>();
 
         bool hasPlaced = false;
         bool isHovering = false;
@@ -25,27 +25,29 @@ namespace Toolkid.UIGrid {
             GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridSystem.Grid.cellSize;
         }
 
-        public void Enable(bool[] Sharp) {
-            m_GridCells.Clear();
+        public void Preview(bool[] Sharp) {
+            m_GridDatas.Clear();
             GetComponent<Grid>().cellSize = InventoryManager.Current.GridSystem.Grid.cellSize;
             for (int i = 0; i < 25; i++) {
                 if (Sharp[i]) {
-                    m_GridCells.Add(new GridCell(Instantiate(m_Prefab).GetComponent<RawImage>()));
-                    m_GridCells[m_GridCells.Count - 1].skin.transform.localPosition = Vector3.zero;
-                    m_GridCells[m_GridCells.Count - 1].skin.GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridSystem.Grid.Get2DSize();
+                    m_GridDatas.Add(new GridData(Instantiate(m_Prefab).GetComponent<RawImage>()));
+                    int lastIndex = m_GridDatas.Count - 1;
+                    m_GridDatas[lastIndex].Skin.transform.localPosition = Vector3.zero;
+                    m_GridDatas[lastIndex].Skin.GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridSystem.Grid.Get2DSize();
                     int midtern = m_SharpSize * m_SharpSize / 2;
                     Vector2Int cell = new Vector2Int((i % m_SharpSize - midtern % m_SharpSize), -(i / m_SharpSize - midtern / m_SharpSize));
-                    m_GridCells[m_GridCells.Count - 1].SetCell(cell);
-                    m_GridCells[m_GridCells.Count - 1].skin.transform.SetParent(InventoryManager.Current.GridDrawer.transform);
-                    m_GridCells[m_GridCells.Count - 1].skin.transform.localPosition = InventoryManager.Current.GridDrawer.GetComponent<Grid>().CellToLocal(new Vector3Int(cell.x, cell.y, 0));
-                    m_GridCells[m_GridCells.Count - 1].skin.transform.localScale = Vector3.one;
+                    m_GridDatas[lastIndex].SetCell(cell);
+                    m_GridDatas[lastIndex].Skin.transform.SetParent(InventoryManager.Current.GridDrawer.transform);
+                    m_GridDatas[lastIndex].Skin.transform.localPosition = InventoryManager.Current.GridDrawer.GetComponent<Grid>().CellToLocal(new Vector3Int(cell.x, cell.y, 0));
+                    m_GridDatas[lastIndex].Skin.transform.localScale = Vector3.one;
                 }
             }
         }
-        public void Placing(Vector2Int index) {
+
+        public void PlaceOn(Vector2Int index) {
             Center = index;
-            foreach (GridCell cell in m_GridCells) {                
-                cell.inventoryIndex = m_GridSystem.GetIndex(index, cell.nativeCell);
+            foreach (GridData cell in m_GridDatas) {                
+                cell.InventoryIndex = m_GridSystem.GetIndex(index, cell.NativeCell);
             }
             var anyClick = new GlobalClickDetector<GridValidator>(this, d => !d.isHovering, TryCancel);
             anyClick.Forget();
@@ -62,27 +64,27 @@ namespace Toolkid.UIGrid {
             Cancel();
         }
         public void Cancel() {
-            foreach (GridCell cell in m_GridCells) {
-                DestroyImmediate(cell.skin.gameObject);
+            foreach (GridData cell in m_GridDatas) {
+                DestroyImmediate(cell.Skin.gameObject);
             }
-            m_GridCells.Clear();
+            m_GridDatas.Clear();
             transform.localRotation = Quaternion.identity;
         }
         public void Rotate() {
-            foreach (GridCell cell in m_GridCells) {
-                cell.nativeCell = cell.nativeCell.RotateClockwise();
+            foreach (GridData cell in m_GridDatas) {
+                cell.NativeCell = cell.NativeCell.RotateClockwise();
             }
             transform.Rotate(0, 0, -90);
             m_InventoryManager.TryPlaceable(Center);
         }
         public void Placeables() {
-            foreach (GridCell cell in m_GridCells) {
-                cell.skin.color = Color.green;
+            foreach (GridData cell in m_GridDatas) {
+                cell.Skin.color = Color.green;
             }
         }
         public void Invalidate() {
-            foreach (GridCell cell in m_GridCells) {
-                cell.skin.color = Color.red;
+            foreach (GridData cell in m_GridDatas) {
+                cell.Skin.color = Color.red;
             }
         }
 

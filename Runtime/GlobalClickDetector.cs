@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 namespace Toolkid.UIGrid {
     public class GlobalClickDetector<T> where T : MonoBehaviour {
@@ -19,71 +18,61 @@ namespace Toolkid.UIGrid {
 
         public void Forget() {
             enabled = true;
-            bool enableUniTask = false;
-#if UNITASK
-            enableUniTask = true;
+//            bool enableUniTask = false;
+//#if UNITASK
+            //enableUniTask = true;
             DetectAsync().Forget();
-#endif
-            if (!enableUniTask) {
-                target.StartCoroutine("Detect");
-            }
+//#endif
+            //if (!enableUniTask) {
+            //    target.StartCoroutine("Detect");
+            //}
         }
 
         public void Start() {
             enabled = true;
-            bool enableUniTask = false;
-#if UNITASK
-            enableUniTask = true;
+            //bool enableUniTask = false;
+//#if UNITASK
+            //enableUniTask = true;
             PermanentDetectAsync().Forget();            
-#endif
-            if (!enableUniTask) {
-                target.StartCoroutine("PermanentDetect");
-            }
+//#endif
+//            if (!enableUniTask) {
+//                target.StartCoroutine("PermanentDetect");
+//            }
         }
 
 #if UNITASK
         public async UniTask DetectAsync() {
             while (enabled) {
-                await UniTask.Yield();                
-                if (Input.GetMouseButton(0) || Input.touchCount > 0) {
-                    if (match.Invoke(target)) {
-                        action?.Invoke();
-                        break;
-                    }
-                }
+                await UniTask.Yield();
+                Invoke(false);
             }
         }
         public async UniTask PermanentDetectAsync() {
             while (enabled) {
                 await UniTask.Yield();
-                if (Input.GetMouseButton(0) || Input.touchCount > 0) {
-                    if (match.Invoke(target)) {
-                        action?.Invoke();                        
-                    }
-                }
+                Invoke(true);
             }
         }
 #endif
         public IEnumerator Detect() {
             while (enabled) {
                 yield return new WaitForEndOfFrame();
-                if (Input.GetMouseButton(0) || Input.touchCount > 0) {
-                    if (match.Invoke(target)) {
-                        action?.Invoke();
-                        break;
-                    }
-                }
+                Invoke(false);
             }
         }
 
         public IEnumerator PermanentDetect() {
             while (enabled) {
                 yield return new WaitForEndOfFrame();
-                if (Input.GetMouseButton(0) || Input.touchCount > 0) {
-                    if (match.Invoke(target)) {
-                        action?.Invoke();
-                        break;
-                    }
+                Invoke(true);
+            }
+        }        
+
+        protected void Invoke(bool isPermanent) {
+            if (Input.GetMouseButton(0) || Input.touchCount > 0) {
+                if (match.Invoke(target)) {
+                    action?.Invoke();
+                    enabled = isPermanent;
                 }
             }
         }
