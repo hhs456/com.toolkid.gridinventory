@@ -11,11 +11,20 @@ namespace Toolkid.UIGrid {
 
         [SerializeField] private RectTransform rect;
         [SerializeField] private Grid grid;
+        [SerializeField] private Material m_Material;
         [SerializeField] private Vector2Int m_GridCount = new Vector2Int(6, 6);
 
         [SerializeField] private Corner startCorner;
+        [SerializeField] private bool IsTileTexture = false;
 
-        private Vector2Int m_PositionOffset;        
+        private Vector2Int m_PositionOffset;
+
+        private void OnValidate() {
+            if (m_Material) {
+                m_Material.SetVector("_GridCount", new Vector4(m_GridCount.x, m_GridCount.y, 0, 0));
+                m_Material.SetInt("_IsTile", IsTileTexture ? 1 : 0);
+            }
+        }
 
         public bool TryArea(Vector2Int index) {
             bool isOutArea = false;
@@ -60,7 +69,11 @@ namespace Toolkid.UIGrid {
             return index.ToInt(cell, startCorner, GridCount.x);
         }
 
-        public void Initialize() {            
+        public void Initialize() {
+            if (m_Material) {
+                m_Material.SetVector("_GridCount",new Vector4(m_GridCount.x, m_GridCount.y, 0, 0));
+                m_Material.SetInt("_IsTile", IsTileTexture ? 1 : 0);
+            }
             m_PositionOffset = new Vector2Int(GridCount.x / 2, GridCount.y / 2);
             Vector2 canvasSize = Rect.rect.size;
             Grid.cellSize = new Vector3(canvasSize.x / GridCount.x, canvasSize.y / GridCount.y, 0);

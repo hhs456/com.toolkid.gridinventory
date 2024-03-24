@@ -16,7 +16,7 @@ namespace Toolkid.UIGrid {
         public GameObject Prefab { get => m_Prefab; set => m_Prefab = value; }
         public Vector2Int Center { get => m_Center; set => m_Center = value; }
 
-        public readonly List<GridData> m_GridDatas = new List<GridData>();
+        public readonly List<GridSlotData> m_GridDatas = new List<GridSlotData>();
 
         bool hasPlaced = false;
         bool isHovering = false;
@@ -30,7 +30,7 @@ namespace Toolkid.UIGrid {
             GetComponent<Grid>().cellSize = InventoryManager.Current.GridSystem.Grid.cellSize;
             for (int i = 0; i < 25; i++) {
                 if (Sharp[i]) {
-                    m_GridDatas.Add(new GridData(Instantiate(m_Prefab).GetComponent<RawImage>()));
+                    m_GridDatas.Add(new GridSlotData(Instantiate(m_Prefab).GetComponent<RawImage>()));
                     int lastIndex = m_GridDatas.Count - 1;
                     m_GridDatas[lastIndex].Skin.transform.localPosition = Vector3.zero;
                     m_GridDatas[lastIndex].Skin.GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridSystem.Grid.Get2DSize();
@@ -46,7 +46,7 @@ namespace Toolkid.UIGrid {
 
         public void PlaceOn(Vector2Int index) {
             Center = index;
-            foreach (GridData cell in m_GridDatas) {                
+            foreach (GridSlotData cell in m_GridDatas) {                
                 cell.InventoryIndex = m_GridSystem.GetIndex(index, cell.NativeCell);
             }
             var anyClick = new GlobalClickDetector<GridValidator>(this, d => !d.isHovering, TryCancel);
@@ -64,26 +64,26 @@ namespace Toolkid.UIGrid {
             Cancel();
         }
         public void Cancel() {
-            foreach (GridData cell in m_GridDatas) {
+            foreach (GridSlotData cell in m_GridDatas) {
                 DestroyImmediate(cell.Skin.gameObject);
             }
             m_GridDatas.Clear();
             transform.localRotation = Quaternion.identity;
         }
         public void Rotate() {
-            foreach (GridData cell in m_GridDatas) {
+            foreach (GridSlotData cell in m_GridDatas) {
                 cell.NativeCell = cell.NativeCell.RotateClockwise();
             }
             transform.Rotate(0, 0, -90);
             m_InventoryManager.TryPlaceable(Center);
         }
         public void Placeables() {
-            foreach (GridData cell in m_GridDatas) {
+            foreach (GridSlotData cell in m_GridDatas) {
                 cell.Skin.color = Color.green;
             }
         }
         public void Invalidate() {
-            foreach (GridData cell in m_GridDatas) {
+            foreach (GridSlotData cell in m_GridDatas) {
                 cell.Skin.color = Color.red;
             }
         }

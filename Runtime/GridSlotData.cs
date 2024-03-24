@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 namespace Toolkid.UIGrid {
-    public class GridData {
+    public class GridSlotData {
         [SerializeField] int m_ObjectID;
         [SerializeField] RawImage m_Skin;
         [SerializeField] Vector2Int m_NativeCell;
         [SerializeField] Vector2Int m_InventoryIndex;
 
-        public GridData(RawImage skin) {
+        public GridSlotData(RawImage skin) {
             this.Skin = skin;
         }
 
