@@ -29,20 +29,20 @@ namespace Toolkid.UIGrid {
         }
 
         public bool TryArea(Vector2Int index) {
-            bool isOutArea = false;
+            bool isSuccess = true;
             if (index.y >= GridCount.y) {
-                isOutArea = true;
+                isSuccess = false;
             }
             else if (index.y < 0) {
-                isOutArea = true;
+                isSuccess = false;
             }
             if (index.x >= GridCount.x) {
-                isOutArea = true;
+                isSuccess = false;
             }
             else if (index.x < 0) {
-                isOutArea = true;
+                isSuccess = false;
             }
-            return isOutArea;
+            return isSuccess;
         }
 
         public Vector2Int GetIndex(Vector2Int center, Vector2Int relative) {
@@ -76,6 +76,7 @@ namespace Toolkid.UIGrid {
         }
 
         public void Initialize(Vector2Int gridCount) {
+            this.gridCount = gridCount;
             if (material) {
                 material.SetVector("_GridCount", new Vector4(gridCount.x, gridCount.y, 0, 0));
                 material.SetInt("_IsTile", IsTileTexture ? 1 : 0);

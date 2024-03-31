@@ -16,7 +16,7 @@ namespace Toolkid.UIGrid {
         }
 
         public void OnBeginDrag(PointerEventData eventData) {
-            m_dragging = Instantiate(m_Image.gameObject, InventoryManager.Current.GridDrawer.transform.parent);
+            m_dragging = Instantiate(m_Image.gameObject, InventoryManager.Current.Validator.transform.parent);
             Canvas canvas = m_dragging.AddComponent<Canvas>();
             canvas.overrideSorting = true;
             canvas.sortingOrder = 2;
@@ -34,7 +34,7 @@ namespace Toolkid.UIGrid {
         public void OnEndDrag(PointerEventData eventData) {
             RectTransformUtility.ScreenPointToWorldPointInRectangle(InventoryManager.Current.GridSystem.GetComponent<RectTransform>(), eventData.position, Camera.main, out Vector3 cursorPos);
             Vector2Int gridIndex = InventoryManager.Current.GridSystem.GetIndex(cursorPos);
-            InventoryManager.Current.GridDrawer.PlaceOn(gridIndex);
+            InventoryManager.Current.Validator.PlaceOn(gridIndex);
             DestroyImmediate(m_dragging.gameObject);
             OnDragEnd?.Invoke(this, eventData);
             var pointer = eventData.pointerCurrentRaycast.gameObject;

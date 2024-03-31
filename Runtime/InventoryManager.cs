@@ -11,11 +11,11 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Current { get; set; }
     public GridSystem GridSystem { get => gridSystem; }
-    public GridValidator GridDrawer { get => gridDrawer; }
+    public GridValidator Validator { get => validator; }
     public StackablesInventory Stackables { get => stackables; }
     public bool IsPlaceable { get => isPlaceable; }
 
-    [SerializeField, FormerlySerializedAs("m_GridDrawer")] private GridValidator gridDrawer;
+    [SerializeField, FormerlySerializedAs("gridDrawer")] private GridValidator validator;
     [SerializeField, FormerlySerializedAs("m_GridSystem")] private GridSystem gridSystem;
     [SerializeField, FormerlySerializedAs("m_SlotPrefab")] private GameObject slotPrefab;
     [SerializeField, FormerlySerializedAs("m_Stackables")] private StackablesInventory stackables;
@@ -27,7 +27,7 @@ public class InventoryManager : MonoBehaviour
     void Start() {
         Current = this;
         GridSystem.Initialize();
-        GridDrawer.Initialize();
+        Validator.Initialize();
         placeables.Initialize();
         //m_Stackables.Initialize();
         slots = new SlotData[GridSystem.GridCount.x * GridSystem.GridCount.y];
@@ -48,57 +48,45 @@ public class InventoryManager : MonoBehaviour
     public void OnHover(Vector3 position) {
         Vector2Int gridIndex = GridSystem.GetIndex(position);
         TryPlaceable(gridIndex);
-        GridDrawer.transform.position = GridSystem.GetCellCenterWorld(position);
+        Validator.transform.position = GridSystem.GetCellCenterWorld(position);
     }
 
     public bool TryPlaceable(Vector2Int gridIndex) {
         bool isPlaceable = true;
-        foreach (var mask in GridDrawer.m_GridDatas) {
-            mask.SetSkin(true);
+        foreach (var mask in Validator.gridDatas) {            
             Vector2Int index = GridSystem.GetIndex(gridIndex, mask.NativeCell);
             int order = GridSystem.GetOrder(gridIndex, mask.NativeCell);
-            if (GridSystem.TryArea(index)) {
+            if (!GridSystem.TryArea(index)) {
                 isPlaceable = false;
-                GridDrawer.Invalidate();
-                mask.SetSkin(false);
+                Validator.Invalidate();
+                mask.SetSkin(false);                
             }
-        }
-        if (isPlaceable) {
-            foreach (var mask in GridDrawer.m_GridDatas) {
+            else if (slots[order].HasUsed) {
+                isPlaceable = false;
+                Validator.Invalidate();
                 mask.SetSkin(true);
-                Vector2Int index = GridSystem.GetIndex(gridIndex, mask.NativeCell);
-                int order = GridSystem.GetOrder(gridIndex, mask.NativeCell);
-                if (slots[order].HasUsed) {
-                    isPlaceable = false;
-                    GridDrawer.Invalidate();
-                }
             }
-            if (isPlaceable) {
-                GridDrawer.Placeables();
+            else {
+                mask.SetSkin(true);
             }
         }
         this.isPlaceable = isPlaceable;
+        if (isPlaceable) {
+            Validator.Placeables();
+        }
         return this.isPlaceable;
     }
 
     public void OnPlaceable(bool[] Sharp) {
-        GridDrawer.Preview(Sharp);
+        Validator.Preview(Sharp);
     }
     public void OnPlace(Vector3 position) {
         Vector2Int gridIndex = GridSystem.GetIndex(position);
-        int center = GridSystem.GetOrder(gridIndex, Vector2Int.zero);
-        foreach (var mask in GridDrawer.m_GridDatas) {
-            if (IsPlaceable) {
-                mask.SetSkin(true);
-                int order = GridSystem.GetOrder(gridIndex, mask.NativeCell);
-                slots[order].SetData(Color.gray);
-                slots[order].SetData(center);
-            }
-        }
+        OnPlace(gridIndex);
     }
     public void OnPlace(Vector2Int index) {        
         int center = GridSystem.GetOrder(index, Vector2Int.zero);
-        foreach (var mask in GridDrawer.m_GridDatas) {
+        foreach (var mask in Validator.gridDatas) {
             if (IsPlaceable) {
                 mask.SetSkin(true);
                 int order = GridSystem.GetOrder(index, mask.NativeCell);
@@ -108,7 +96,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
     public void Places() {
-        OnPlace(GridDrawer.Center);
-        GridDrawer.Cancel();
+        OnPlace(Validator.Center);
+        Validator.Cancel();
     }
 }
