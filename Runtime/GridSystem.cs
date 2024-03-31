@@ -1,28 +1,30 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Toolkid.UIGrid {
     public class GridSystem : MonoBehaviour {
         public RectTransform Rect { get => rect; }
         public Grid Grid { get => grid; }
-        public Vector2Int PositionOffset { get => m_PositionOffset; }
-        public Vector2Int GridCount { get => m_GridCount; }
+        public Vector2Int PositionOffset { get => positionOffset; }
+        public Vector2Int GridCount { get => gridCount; }
         public Corner StartCorner { get => startCorner; set => startCorner = value; }
 
         [SerializeField] private RectTransform rect;
         [SerializeField] private Grid grid;
-        [SerializeField] private Material m_Material;
-        [SerializeField] private Vector2Int m_GridCount = new Vector2Int(6, 6);
+        [SerializeField, FormerlySerializedAs("m_Material")] private Material material;
+        [SerializeField, FormerlySerializedAs("m_GridCount")] private Vector2Int gridCount = new Vector2Int(6, 6);
 
         [SerializeField] private Corner startCorner;
-        [SerializeField] private bool IsTileTexture = false;
+        [SerializeField, Tooltip("Experimental function.")]
+        private bool IsTileTexture = false;
 
-        private Vector2Int m_PositionOffset;
+        [FormerlySerializedAs("m_PositionOffset")] private Vector2Int positionOffset;
 
         private void OnValidate() {
-            if (m_Material) {
-                m_Material.SetVector("_GridCount", new Vector4(m_GridCount.x, m_GridCount.y, 0, 0));
-                m_Material.SetInt("_IsTile", IsTileTexture ? 1 : 0);
+            if (material) {
+                material.SetVector("_GridCount", new Vector4(gridCount.x, gridCount.y, 0, 0));
+                material.SetInt("_IsTile", IsTileTexture ? 1 : 0);
             }
         }
 
@@ -70,15 +72,19 @@ namespace Toolkid.UIGrid {
         }
 
         public void Initialize() {
-            if (m_Material) {
-                m_Material.SetVector("_GridCount",new Vector4(m_GridCount.x, m_GridCount.y, 0, 0));
-                m_Material.SetInt("_IsTile", IsTileTexture ? 1 : 0);
+            Initialize(gridCount);
+        }
+
+        public void Initialize(Vector2Int gridCount) {
+            if (material) {
+                material.SetVector("_GridCount", new Vector4(gridCount.x, gridCount.y, 0, 0));
+                material.SetInt("_IsTile", IsTileTexture ? 1 : 0);
             }
-            m_PositionOffset = new Vector2Int(GridCount.x / 2, GridCount.y / 2);
+            positionOffset = new Vector2Int(gridCount.x / 2, gridCount.y / 2);
             Vector2 canvasSize = Rect.rect.size;
-            Grid.cellSize = new Vector3(canvasSize.x / GridCount.x, canvasSize.y / GridCount.y, 0);
-            float x_offset = GridCount.x % 2 == 0 ? 0 : Grid.cellSize.x / 2;            
-            float y_offset = GridCount.y % 2 == 0 ? 0 : Grid.cellSize.y / 2;            
+            Grid.cellSize = new Vector3(canvasSize.x / gridCount.x, canvasSize.y / gridCount.y, 0);
+            float x_offset = gridCount.x % 2 == 0 ? 0 : Grid.cellSize.x / 2;
+            float y_offset = gridCount.y % 2 == 0 ? 0 : Grid.cellSize.y / 2;
             switch (startCorner) {
                 case Corner.UpperLeft:
                     x_offset = -x_offset;

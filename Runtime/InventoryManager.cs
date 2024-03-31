@@ -4,36 +4,37 @@ using System.Runtime.InteropServices.ComTypes;
 using Toolkid.UIGrid;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Current { get; set; }
-    public GridSystem GridSystem { get => m_GridSystem; }
-    public GridValidator GridDrawer { get => m_GridDrawer; }
-    public StackablesManager Stackables { get => m_Stackables; }
-    public bool IsPlaceable { get => m_IsPlaceable; }
+    public GridSystem GridSystem { get => gridSystem; }
+    public GridValidator GridDrawer { get => gridDrawer; }
+    public StackablesInventory Stackables { get => stackables; }
+    public bool IsPlaceable { get => isPlaceable; }
 
-    [SerializeField] private GridValidator m_GridDrawer;
-    [SerializeField] private GridSystem m_GridSystem;
-    [SerializeField] private GameObject m_SlotPrefab;
-    [SerializeField] private StackablesManager m_Stackables;
-    [SerializeField] private PlaceablesDatas m_Placeables;
+    [SerializeField, FormerlySerializedAs("m_GridDrawer")] private GridValidator gridDrawer;
+    [SerializeField, FormerlySerializedAs("m_GridSystem")] private GridSystem gridSystem;
+    [SerializeField, FormerlySerializedAs("m_SlotPrefab")] private GameObject slotPrefab;
+    [SerializeField, FormerlySerializedAs("m_Stackables")] private StackablesInventory stackables;
+    [SerializeField, FormerlySerializedAs("m_Placeables")] private PlaceablesDatas placeables;
     [SerializeField] SlotData[] slots;
 
-    [SerializeField] bool m_IsPlaceable = false;
+    [SerializeField] bool isPlaceable = false;
 
     void Start() {
         Current = this;
         GridSystem.Initialize();
         GridDrawer.Initialize();
-        m_Placeables.Initialize();
+        placeables.Initialize();
         //m_Stackables.Initialize();
         slots = new SlotData[GridSystem.GridCount.x * GridSystem.GridCount.y];
         for (int i = 0; i < GridSystem.GridCount.y; i++) {            
             for (int j = 0; j < GridSystem.GridCount.x; j++) {
                 int index = j + GridSystem.GridCount.x * i;
-                slots[index] = new SlotData(Instantiate(m_SlotPrefab).GetComponent<RawImage>());                
+                slots[index] = new SlotData(Instantiate(slotPrefab).GetComponent<RawImage>());                
                 slots[index].Image.transform.localPosition = Vector3.zero;
                 slots[index].Image.GetComponent<RectTransform>().sizeDelta = GridSystem.Grid.Get2DSize() * 0.95f;
                 slots[index].Image.transform.SetParent(transform);
@@ -76,8 +77,8 @@ public class InventoryManager : MonoBehaviour
                 GridDrawer.Placeables();
             }
         }
-        m_IsPlaceable = isPlaceable;
-        return m_IsPlaceable;
+        this.isPlaceable = isPlaceable;
+        return this.isPlaceable;
     }
 
     public void OnPlaceable(bool[] Sharp) {
