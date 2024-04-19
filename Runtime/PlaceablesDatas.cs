@@ -8,7 +8,7 @@ namespace Toolkid.UIGrid {
         [SerializeField] private PlaceablesData[] datas;
         public static Dictionary<int, PlaceablesData> Datas = new Dictionary<int, PlaceablesData>();
 
-        public void Initialize() {
+        public void Initializes() {
             Datas = new Dictionary<int, PlaceablesData>();
             foreach (var data in datas) {
                 Datas.Add(data.ID, data);

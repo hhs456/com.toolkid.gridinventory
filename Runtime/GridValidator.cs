@@ -1,31 +1,37 @@
-﻿using Cysharp.Threading.Tasks;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 namespace Toolkid.UIGrid {
+    /// <summary>
+    /// Manages the validation and placement of grid-based objects in the Unity environment.
+    /// </summary>
     public class GridValidator : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
-        [SerializeField, FormerlySerializedAs("m_InventoryManager")] private InventoryManager inventoryManager;
-        [SerializeField, FormerlySerializedAs("m_GridSystem")] private GridRegion gridSystem;
-        [SerializeField, FormerlySerializedAs("m_SharpSize")] private int sharpSize = 5;
-        [SerializeField, FormerlySerializedAs("m_Center")] private Vector2Int center;
-        [SerializeField, FormerlySerializedAs("m_Prefab")] private GameObject prefab;
-        [SerializeField, FormerlySerializedAs("m_Relatives")] private GameObject[] relatives;
+        [SerializeField] private InventoryManager inventoryManager;
+        [SerializeField] private GridRegion gridSystem;
+        [SerializeField] private int sharpSize = 5;
+        [SerializeField] private Vector2Int center;
+        [SerializeField] private GameObject prefab;
+        [SerializeField] private GameObject[] relatives;
         public GameObject Prefab { get => prefab; set => prefab = value; }
         public Vector2Int Center { get => center; set => center = value; }
 
-        [SerializeField, FormerlySerializedAs("m_GridDatas")] public readonly List<GridSlotData> gridDatas = new List<GridSlotData>();
+        [SerializeField] public readonly List<GridSlotData> gridDatas = new List<GridSlotData>();
+                
+        private bool isHovering = false;
 
-        bool hasPlaced = false;
-        bool isHovering = false;
-
-        public void Initialize() {
+        /// <summary>
+        /// Initializes the grid validator component.
+        /// </summary>
+        public void Initializes() {
             GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridSystem.Grid.cellSize;
         }
 
+        /// <summary>
+        /// Generates a preview of the grid based on the provided sharp array.
+        /// </summary>
+        /// <param name="Sharp">An array indicating the shape of the grid.</param>
         public void Preview(bool[] Sharp) {
             gridDatas.Clear();
             GetComponent<Grid>().cellSize = InventoryManager.Current.GridSystem.Grid.cellSize;
@@ -45,6 +51,10 @@ namespace Toolkid.UIGrid {
             }
         }
 
+        /// <summary>
+        /// Places the grid validator on the specified grid index.
+        /// </summary>
+        /// <param name="index">The index where the grid validator will be placed.</param>
         public void PlaceOn(Vector2Int index) {
             Center = index;
             foreach (GridSlotData cell in gridDatas) {                
@@ -54,6 +64,9 @@ namespace Toolkid.UIGrid {
             anyClick.Forget();
         }
 
+        /// <summary>
+        /// Attempts to cancel the current grid placement operation.
+        /// </summary>
         public void TryCancel() {
             PointerEventData pointerEvent = new PointerEventData(EventSystem.current);
             pointerEvent.position = Input.mousePosition;
@@ -64,6 +77,10 @@ namespace Toolkid.UIGrid {
             }
             Cancel();
         }
+
+        /// <summary>
+        /// Cancels the current grid placement operation.
+        /// </summary>
         public void Cancel() {
             foreach (GridSlotData cell in gridDatas) {
                 DestroyImmediate(cell.Skin.gameObject);
@@ -71,6 +88,10 @@ namespace Toolkid.UIGrid {
             gridDatas.Clear();
             transform.localRotation = Quaternion.identity;
         }
+
+        /// <summary>
+        /// Rotates the grid validator clockwise.
+        /// </summary>
         public void Rotate() {
             foreach (GridSlotData cell in gridDatas) {
                 cell.NativeCell = cell.NativeCell.RotateClockwise();
@@ -78,11 +99,19 @@ namespace Toolkid.UIGrid {
             transform.Rotate(0, 0, -90);
             inventoryManager.TryPlaceable(Center);
         }
+
+        /// <summary>
+        /// Highlights the grid slots where the validator can be placed.
+        /// </summary>
         public void Placeables() {
             foreach (GridSlotData cell in gridDatas) {
                 cell.Skin.color = Color.green;
             }
         }
+
+        /// <summary>
+        /// Invalidates the grid slots where the validator cannot be placed.
+        /// </summary>
         public void Invalidate() {
             foreach (GridSlotData cell in gridDatas) {
                 cell.Skin.color = Color.red;
