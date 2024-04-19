@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace Toolkid.UIGrid {
     public class GridValidator : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
         [SerializeField, FormerlySerializedAs("m_InventoryManager")] private InventoryManager inventoryManager;
-        [SerializeField, FormerlySerializedAs("m_GridSystem")] private GridSystem gridSystem;
+        [SerializeField, FormerlySerializedAs("m_GridSystem")] private GridRegion gridSystem;
         [SerializeField, FormerlySerializedAs("m_SharpSize")] private int sharpSize = 5;
         [SerializeField, FormerlySerializedAs("m_Center")] private Vector2Int center;
         [SerializeField, FormerlySerializedAs("m_Prefab")] private GameObject prefab;

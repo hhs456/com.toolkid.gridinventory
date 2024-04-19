@@ -28,7 +28,7 @@ namespace Toolkid.UIGrid {
             }
             return y * columnCount + x;
         }
-        public static int ToInt(GridSystem gridSystem, Vector2Int index, Vector2Int cell) {
+        public static int ToInt(GridRegion gridSystem, Vector2Int index, Vector2Int cell) {
             return index.ToInt(cell, gridSystem.StartCorner, gridSystem.GridCount.x);
         }
         public static Vector2Int ToVector2(this int index, int columnCount) {           

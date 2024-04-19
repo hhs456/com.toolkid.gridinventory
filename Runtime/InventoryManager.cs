@@ -10,13 +10,13 @@ using UnityEngine.UI;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Current { get; set; }
-    public GridSystem GridSystem { get => gridSystem; }
+    public GridRegion GridSystem { get => gridSystem; }
     public GridValidator Validator { get => validator; }
     public StackablesInventory Stackables { get => stackables; }
     public bool IsPlaceable { get => isPlaceable; }
 
     [SerializeField, FormerlySerializedAs("gridDrawer")] private GridValidator validator;
-    [SerializeField, FormerlySerializedAs("m_GridSystem")] private GridSystem gridSystem;
+    [SerializeField, FormerlySerializedAs("m_GridSystem")] private GridRegion gridSystem;
     [SerializeField, FormerlySerializedAs("m_SlotPrefab")] private GameObject slotPrefab;
     [SerializeField, FormerlySerializedAs("m_Stackables")] private StackablesInventory stackables;
     [SerializeField, FormerlySerializedAs("m_Placeables")] private PlaceablesDatas placeables;
@@ -26,7 +26,7 @@ public class InventoryManager : MonoBehaviour
 
     void Start() {
         Current = this;
-        GridSystem.Initialize();
+        GridSystem.Initializes();
         Validator.Initialize();
         placeables.Initialize();
         //m_Stackables.Initialize();
@@ -56,7 +56,7 @@ public class InventoryManager : MonoBehaviour
         foreach (var mask in Validator.gridDatas) {            
             Vector2Int index = GridSystem.GetIndex(gridIndex, mask.NativeCell);
             int order = GridSystem.GetOrder(gridIndex, mask.NativeCell);
-            if (!GridSystem.TryArea(index)) {
+            if (!GridSystem.Contains(index)) {
                 isPlaceable = false;
                 Validator.Invalidate();
                 mask.SetSkin(false);                

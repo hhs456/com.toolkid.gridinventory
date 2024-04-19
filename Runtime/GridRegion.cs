@@ -1,50 +1,53 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Toolkid.UIGrid {
-    public class GridSystem : MonoBehaviour {
+    /// <summary>
+    /// Manages grid-based calculations and transitions using Unity's Grid system.
+    /// </summary>
+    public class GridRegion : MonoBehaviour {
+
+        [SerializeField] private RectTransform rect;
+        [SerializeField] private Grid grid;
+        [SerializeField] private Material material;
+        [SerializeField] private Vector2Int gridCount = new Vector2Int(6, 6);
+        [SerializeField] private Corner startCorner;
+
+        [SerializeField, Tooltip("Experimental function.")] private Vector2Int positionOffset;
+
+        private bool isTileTexture = false;        
+
         public RectTransform Rect { get => rect; }
         public Grid Grid { get => grid; }
         public Vector2Int PositionOffset { get => positionOffset; }
         public Vector2Int GridCount { get => gridCount; }
         public Corner StartCorner { get => startCorner; set => startCorner = value; }
-
-        [SerializeField] private RectTransform rect;
-        [SerializeField] private Grid grid;
-        [SerializeField, FormerlySerializedAs("m_Material")] private Material material;
-        [SerializeField, FormerlySerializedAs("m_GridCount")] private Vector2Int gridCount = new Vector2Int(6, 6);
-
-        [SerializeField] private Corner startCorner;
-        [SerializeField, Tooltip("Experimental function.")]
-        private bool IsTileTexture = false;
-
-        [FormerlySerializedAs("m_PositionOffset")] private Vector2Int positionOffset;
+        
 
         private void OnValidate() {
             if (material) {
                 material.SetVector("_GridCount", new Vector4(gridCount.x, gridCount.y, 0, 0));
-                material.SetInt("_IsTile", IsTileTexture ? 1 : 0);
+                material.SetInt("_IsTile", isTileTexture ? 1 : 0);
             }
         }
 
-        public bool TryArea(Vector2Int index) {
-            bool isSuccess = true;
-            if (index.y >= GridCount.y) {
-                isSuccess = false;
-            }
-            else if (index.y < 0) {
-                isSuccess = false;
-            }
-            if (index.x >= GridCount.x) {
-                isSuccess = false;
-            }
-            else if (index.x < 0) {
-                isSuccess = false;
-            }
-            return isSuccess;
+        /// <summary>
+        /// Determines whether the <see cref="GridRegion"/> contains the specified grid index.
+        /// </summary>
+        /// <param name="index">The grid index to check.</param>
+        /// <returns>True if the <see cref="GridRegion"/> contains the specified index, otherwise false.</returns>
+        public bool Contains(Vector2Int index) {
+            bool withinXBounds = index.x >= 0 && index.x < GridCount.x;
+            bool withinYBounds = index.y >= 0 && index.y < GridCount.y;
+            return withinXBounds && withinYBounds;
         }
 
+        /// <summary>
+        /// Calculates the grid index based on the center point and relative position.
+        /// </summary>
+        /// <param name="center">The center point of the grid.</param>
+        /// <param name="relative">The position relative to the center point.</param>
+        /// <returns>The computed grid index.</returns>
         public Vector2Int GetIndex(Vector2Int center, Vector2Int relative) {
             int x = center.x + relative.x;
             int y = center.y + relative.y;
@@ -67,19 +70,32 @@ namespace Toolkid.UIGrid {
             return new Vector2Int(x, y);
         }
 
+        /// <summary>
+        /// Gets the order value for the specified index and cell position.
+        /// </summary>
+        /// <param name="index">The index of the grid.</param>
+        /// <param name="cell">The position of the cell.</param>
+        /// <returns>The order value.</returns>
         public int GetOrder(Vector2Int index, Vector2Int cell) {
             return index.ToInt(cell, startCorner, GridCount.x);
         }
-
-        public void Initialize() {
-            Initialize(gridCount);
+        
+        /// <summary>
+        /// Initializes the grid system using the previously set grid count.
+        /// </summary>
+        public void Initializes() {
+            Initializes(gridCount);
         }
 
-        public void Initialize(Vector2Int gridCount) {
+        /// <summary>
+        /// Initializes the grid system with the specified grid count and adjusts various properties accordingly.
+        /// </summary>
+        /// <param name="gridCount">The number of grids in the system.</param>
+        public void Initializes(Vector2Int gridCount) {
             this.gridCount = gridCount;
             if (material) {
                 material.SetVector("_GridCount", new Vector4(gridCount.x, gridCount.y, 0, 0));
-                material.SetInt("_IsTile", IsTileTexture ? 1 : 0);
+                material.SetInt("_IsTile", isTileTexture ? 1 : 0);
             }
             positionOffset = new Vector2Int(gridCount.x / 2, gridCount.y / 2);
             Vector2 canvasSize = Rect.rect.size;
@@ -105,11 +121,21 @@ namespace Toolkid.UIGrid {
             grid.transform.localPosition = new Vector3(grid.transform.localPosition.x + x_offset, grid.transform.localPosition.y + y_offset, 0);
         }
 
+        /// <summary>
+        /// Converts a world space position to the center position of the corresponding grid cell in world space.
+        /// </summary>
+        /// <param name="position">The world space position to convert.</param>
+        /// <returns>The center position of the corresponding grid cell in world space.</returns>
         public Vector3 GetCellCenterWorld(Vector3 position) {
             Vector2Int gridIndex = GetIndex(position);            
             return GetWorldPosition(gridIndex);
         }
 
+        /// <summary>
+        /// Converts a grid cell position to the corresponding world space position.
+        /// </summary>
+        /// <param name="cell">The position of the grid cell to convert.</param>
+        /// <returns>The world space position corresponding to the center of the grid cell.</returns>
         public Vector3 GetWorldPosition(Vector2Int cell) {
             int x = cell.x - PositionOffset.x;
             int y = cell.y - PositionOffset.y;
@@ -125,16 +151,19 @@ namespace Toolkid.UIGrid {
                     break;
                 case Corner.LowerRight:
                     x = -x - 1;
-
                     break;
                 default:
                     break;
             }
-
             Vector3Int placePos = new Vector3Int(x, y, 0);
             return Grid.GetCellCenterWorld(placePos);
         }
 
+        /// <summary>
+        /// Converts a world space position to the corresponding grid cell index.
+        /// </summary>
+        /// <param name="position">The world space position to convert.</param>
+        /// <returns>The index of the grid cell corresponding to the provided world space position.</returns>
         public Vector2Int GetIndex(Vector3 position) {
             Vector3Int cellPos = Grid.WorldToCell(position);
             int x = cellPos.x + PositionOffset.x;            

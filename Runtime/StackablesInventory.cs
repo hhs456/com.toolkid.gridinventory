@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public class StackablesInventory : MonoBehaviour, IPageable
 {
-    public GridSystem GridSystem { get => gridSystem; }
+    public GridRegion GridSystem { get => gridSystem; }
     public int CurrentPage { get => currentPage; set => currentPage = value; }
     public Vector2Int PageSize { get => pageSize; set => pageSize = value; }
     public int PageCount { get => pageCount; set => pageCount = value; }
@@ -23,7 +23,7 @@ public class StackablesInventory : MonoBehaviour, IPageable
     [SerializeField] protected Vector2Int pageSize;
     [SerializeField] protected bool isLoop;
 
-    [SerializeField, FormerlySerializedAs("m_GridSystem")] protected GridSystem gridSystem;
+    [SerializeField, FormerlySerializedAs("m_GridSystem")] protected GridRegion gridSystem;
     [SerializeField, FormerlySerializedAs("m_SlotPrefab")] protected GameObject slotPrefab;
     Stackables[] stackables;
     List<SlotData> slots = new List<SlotData>();
@@ -34,7 +34,7 @@ public class StackablesInventory : MonoBehaviour, IPageable
         //foreach (Stackables stackable in stackables) {
         //    stackable.Initialize();
         //}
-        GridSystem.Initialize(pageSize);
+        GridSystem.Initializes(pageSize);
         PageCount = count / (pageSize.x * pageSize.y);
         slots.Clear();
         int id = currentPage * PageCount + 1;
