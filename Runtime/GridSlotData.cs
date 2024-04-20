@@ -2,22 +2,23 @@
 using UnityEngine.UI;
 namespace Toolkid.UIGrid {
     public class GridSlotData {
-        [SerializeField] int m_ObjectID;
-        [SerializeField] RawImage m_Skin;
-        [SerializeField] Vector2Int m_NativeCell;
-        [SerializeField] Vector2Int m_InventoryIndex;
+
+        [SerializeField] private int objectID;
+        [SerializeField] private RawImage skin;
+        [SerializeField] private Vector2Int nativeCell;
+        [SerializeField] private Vector2Int inventoryIndex;
+
+        public int ObjectID { get => objectID; set => objectID = value; }
+        public RawImage Skin { get => skin; set => skin = value; }
+        public Vector2Int NativeCell { get => nativeCell; set => nativeCell = value; }
+        public Vector2Int InventoryIndex { get => inventoryIndex; set => inventoryIndex = value; }
 
         public GridSlotData(RawImage skin) {
-            this.Skin = skin;
+            Skin = skin;
         }
 
-        public int ObjectID { get => m_ObjectID; set => m_ObjectID = value; }
-        public RawImage Skin { get => m_Skin; set => m_Skin = value; }
-        public Vector2Int NativeCell { get => m_NativeCell; set => m_NativeCell = value; }
-        public Vector2Int InventoryIndex { get => m_InventoryIndex; set => m_InventoryIndex = value; }
-
         public void SetCell(Vector2Int cell) {
-            this.NativeCell = cell;
+            NativeCell = cell;
         }
         public void SetSkin(bool enable) {
             Skin.enabled = enable;

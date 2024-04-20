@@ -96,7 +96,7 @@ namespace Toolkid.UIGrid {
             foreach (GridSlotData cell in gridDatas) {
                 cell.NativeCell = cell.NativeCell.RotateClockwise();
             }
-            transform.Rotate(0, 0, -90);
+            transform.Rotate(0, 0, -90); // it would be rotate clockwise as `-`
             inventoryManager.TryPlaceable(Center);
         }
 
