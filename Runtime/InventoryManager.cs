@@ -1,90 +1,96 @@
 ﻿using Toolkid.UIGrid;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour {
     [SerializeField] private GridValidator validator;
-    [SerializeField] private GridRegion gridSystem;
+    [SerializeField, FormerlySerializedAs("gridSystem")] private GridRegion gridRegion;
     [SerializeField] private GameObject slotPrefab;
     [SerializeField] private StackablesInventory stackables;
     [SerializeField] private PlaceablesDatas placeables;
     [SerializeField] private SlotData[] slots;
 
-    [SerializeField] private bool isPlaceable = false;
-
     public static InventoryManager Current { get; set; }
-    public GridRegion GridSystem { get => gridSystem; }
+    public GridRegion GridRegion { get => gridRegion; }
     public GridValidator Validator { get => validator; }
     public StackablesInventory Stackables { get => stackables; }
-    public bool IsPlaceable { get => isPlaceable; }
 
     private void Start() {
         Current = this;
-        GridSystem.Initializes();
+        GridRegion.Initializes();
         Validator.Initializes();
         placeables.Initializes();
         //m_Stackables.Initialize();
-        slots = new SlotData[GridSystem.GridCount.x * GridSystem.GridCount.y];
-        for (int i = 0; i < GridSystem.GridCount.y; i++) {
-            for (int j = 0; j < GridSystem.GridCount.x; j++) {
-                int index = j + GridSystem.GridCount.x * i;
+        slots = new SlotData[GridRegion.GridCount.x * GridRegion.GridCount.y];
+        for (int i = 0; i < GridRegion.GridCount.y; i++) {
+            for (int j = 0; j < GridRegion.GridCount.x; j++) {
+                int index = j + GridRegion.GridCount.x * i;
                 slots[index] = new SlotData(Instantiate(slotPrefab).GetComponent<RawImage>());
                 slots[index].Image.transform.localPosition = Vector3.zero;
-                slots[index].Image.GetComponent<RectTransform>().sizeDelta = GridSystem.Grid.Get2DSize() * 0.95f;
+                slots[index].Image.GetComponent<RectTransform>().sizeDelta = GridRegion.Grid.Get2DSize() * 0.95f;
                 slots[index].Image.transform.SetParent(transform);
-                slots[index].Image.transform.position = GridSystem.GetWorldPosition(new Vector2Int(j, i));
+                slots[index].Image.transform.position = GridRegion.GetWorldPosition(new Vector2Int(j, i));
                 slots[index].Image.transform.localScale = Vector3.one;
             }
         }
     }
 
-    public void OnHover(Vector3 position) {
-        Vector2Int gridIndex = GridSystem.GetIndex(position);
-        TryPlaceable(gridIndex);
-        Validator.transform.position = GridSystem.GetCellCenterWorld(position);
+    /// <summary>
+    /// Called when the mouse hovers over a position in the grid.
+    /// </summary>
+    /// <param name="cursorPosition">The position in world space.</param>
+    public void OnDragging(Vector3 cursorPosition) {
+        Vector2Int gridIndex = GridRegion.GetIndex(cursorPosition);
+        CheckPlaceableAt(gridIndex);
+        Validator.transform.position = GridRegion.GetCellCenterWorld(cursorPosition);
     }
 
-    public bool TryPlaceable(Vector2Int gridIndex) {
-        bool isPlaceable = true;
+    /// <summary>
+    /// Tries to determine if the specified grid index is placeable.
+    /// </summary>
+    /// <param name="gridIndex">The grid index to check.</param>
+    /// <returns>True if the grid index is placeable, false otherwise.</returns>
+    public void CheckPlaceableAt(Vector2Int gridIndex) {
+        bool isValid = true;        
         foreach (var mask in Validator.gridDatas) {
-            Vector2Int index = GridSystem.GetIndex(gridIndex, mask.NativeCell);
-            int order = GridSystem.GetOrder(gridIndex, mask.NativeCell);
-            if (!GridSystem.Contains(index)) {
-                isPlaceable = false;
-                Validator.Invalidate();
+            Vector2Int index = GridRegion.GetIndex(gridIndex, mask.NativeCell);
+            int order = GridRegion.GetOrder(gridIndex, mask.NativeCell);
+            if (!GridRegion.Contains(index)) {
+                isValid = false;
                 mask.SetSkin(false);
             }
             else if (slots[order].HasUsed) {
-                isPlaceable = false;
-                Validator.Invalidate();
+                isValid = false;                
                 mask.SetSkin(true);
             }
             else {
                 mask.SetSkin(true);
             }
+            if (isValid) {
+                Validator.Validates();
+            }
+            else {
+                Validator.Invalidates();
+            }
         }
-        this.isPlaceable = isPlaceable;
-        if (isPlaceable) {
-            Validator.Placeables();
-        }
-        return this.isPlaceable;
     }
 
-    public void OnPlaceable(bool[] Sharp) {
+    public void DoPlaceable(bool[] Sharp) {
         Validator.Preview(Sharp);
     }
 
-    public void OnPlace(Vector3 position) {
-        Vector2Int gridIndex = GridSystem.GetIndex(position);
-        OnPlace(gridIndex);
+    public void PlacesAt(Vector3 position) {
+        Vector2Int gridIndex = GridRegion.GetIndex(position);
+        PlacesAt(gridIndex);
     }
 
-    public void OnPlace(Vector2Int index) {
-        int center = GridSystem.GetOrder(index, Vector2Int.zero);
+    public void PlacesAt(Vector2Int index) {
+        int center = GridRegion.GetOrder(index, Vector2Int.zero);
         foreach (var mask in Validator.gridDatas) {
-            if (IsPlaceable) {
+            if (Validator.IsValid) {
                 mask.SetSkin(true);
-                int order = GridSystem.GetOrder(index, mask.NativeCell);
+                int order = GridRegion.GetOrder(index, mask.NativeCell);
                 slots[order].SetData(Color.gray);
                 slots[order].SetData(center);
             }
@@ -92,7 +98,7 @@ public class InventoryManager : MonoBehaviour {
     }
 
     public void Places() {
-        OnPlace(Validator.Center);
+        PlacesAt(Validator.Center);
         Validator.Cancel();
     }
 }

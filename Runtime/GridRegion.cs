@@ -17,11 +17,11 @@ namespace Toolkid.UIGrid {
 
         private bool isTileTexture = false;        
 
-        public RectTransform Rect { get => rect; }
-        public Grid Grid { get => grid; }
-        public Vector2Int PositionOffset { get => positionOffset; }
-        public Vector2Int GridCount { get => gridCount; }
-        public Corner StartCorner { get => startCorner; set => startCorner = value; }
+        public RectTransform Rect => rect;
+        public Grid Grid => grid;
+        public Vector2Int PositionOffset => positionOffset;
+        public Vector2Int GridCount => gridCount;
+        public Corner StartCorner => startCorner;
         
 
         private void OnValidate() {

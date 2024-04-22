@@ -1,4 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
+﻿#if UNITASK
+using Cysharp.Threading.Tasks;
+#endif
 using System;
 using System.Collections;
 using UnityEngine;
@@ -18,26 +20,26 @@ namespace Toolkid.UIGrid {
 
         public void Forget() {
             enabled = true;
-//            bool enableUniTask = false;
-//#if UNITASK
-            //enableUniTask = true;
+            bool enableUniTask = false;
+#if UNITASK
+            enableUniTask = true;
             DetectAsync().Forget();
-//#endif
-            //if (!enableUniTask) {
-            //    target.StartCoroutine("Detect");
-            //}
+#endif
+            if (!enableUniTask) {
+                target.StartCoroutine("Detect");
+            }
         }
 
         public void Start() {
             enabled = true;
-            //bool enableUniTask = false;
-//#if UNITASK
-            //enableUniTask = true;
-            PermanentDetectAsync().Forget();            
-//#endif
-//            if (!enableUniTask) {
-//                target.StartCoroutine("PermanentDetect");
-//            }
+            bool enableUniTask = false;
+#if UNITASK
+            enableUniTask = true;
+            PermanentDetectAsync().Forget();
+#endif
+            if (!enableUniTask) {
+                target.StartCoroutine("PermanentDetect");
+            }
         }
 
 #if UNITASK

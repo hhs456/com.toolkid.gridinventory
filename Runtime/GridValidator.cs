@@ -14,8 +14,11 @@ namespace Toolkid.UIGrid {
         [SerializeField] private Vector2Int center;
         [SerializeField] private GameObject prefab;
         [SerializeField] private GameObject[] relatives;
+        [SerializeField] private bool isValid = false;
         public GameObject Prefab { get => prefab; set => prefab = value; }
         public Vector2Int Center { get => center; set => center = value; }
+
+        public bool IsValid { get => isValid; }
 
         [SerializeField] public readonly List<GridSlotData> gridDatas = new List<GridSlotData>();
                 
@@ -25,7 +28,7 @@ namespace Toolkid.UIGrid {
         /// Initializes the grid validator component.
         /// </summary>
         public void Initializes() {
-            GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridSystem.Grid.cellSize;
+            GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridRegion.Grid.cellSize;
         }
 
         /// <summary>
@@ -34,13 +37,13 @@ namespace Toolkid.UIGrid {
         /// <param name="Sharp">An array indicating the shape of the grid.</param>
         public void Preview(bool[] Sharp) {
             gridDatas.Clear();
-            GetComponent<Grid>().cellSize = InventoryManager.Current.GridSystem.Grid.cellSize;
+            GetComponent<Grid>().cellSize = InventoryManager.Current.GridRegion.Grid.cellSize;
             for (int i = 0; i < 25; i++) {
                 if (Sharp[i]) {
                     gridDatas.Add(new GridSlotData(Instantiate(prefab).GetComponent<RawImage>()));
                     int lastIndex = gridDatas.Count - 1;
                     gridDatas[lastIndex].Skin.transform.localPosition = Vector3.zero;
-                    gridDatas[lastIndex].Skin.GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridSystem.Grid.Get2DSize();
+                    gridDatas[lastIndex].Skin.GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridRegion.Grid.Get2DSize();
                     int midtern = sharpSize * sharpSize / 2;
                     Vector2Int cell = new Vector2Int((i % sharpSize - midtern % sharpSize), -(i / sharpSize - midtern / sharpSize));
                     gridDatas[lastIndex].SetCell(cell);
@@ -97,13 +100,14 @@ namespace Toolkid.UIGrid {
                 cell.NativeCell = cell.NativeCell.RotateClockwise();
             }
             transform.Rotate(0, 0, -90); // it would be rotate clockwise as `-`
-            inventoryManager.TryPlaceable(Center);
+            inventoryManager.CheckPlaceableAt(Center);
         }
 
         /// <summary>
         /// Highlights the grid slots where the validator can be placed.
         /// </summary>
-        public void Placeables() {
+        public void Validates() {
+            isValid = true;
             foreach (GridSlotData cell in gridDatas) {
                 cell.Skin.color = Color.green;
             }
@@ -112,7 +116,8 @@ namespace Toolkid.UIGrid {
         /// <summary>
         /// Invalidates the grid slots where the validator cannot be placed.
         /// </summary>
-        public void Invalidate() {
+        public void Invalidates() {
+            isValid = false;
             foreach (GridSlotData cell in gridDatas) {
                 cell.Skin.color = Color.red;
             }

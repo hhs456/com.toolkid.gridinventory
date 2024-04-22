@@ -1,16 +1,17 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [Serializable]
 public class SlotData {
     [SerializeField] private Texture originTexture;
     [SerializeField] private Color originColor;
-    [SerializeField] private RawImage m_Image;
+    [SerializeField, FormerlySerializedAs("m_Image")] private RawImage image;
     [SerializeField] private bool hasUsed = false;
     [SerializeField] private int centerIndex = -1;
 
-    public RawImage Image { get => m_Image; private set => m_Image = value; }
+    public RawImage Image { get => image; private set => image = value; }
 
     public bool HasUsed { get => hasUsed; private set => hasUsed = value; }
 

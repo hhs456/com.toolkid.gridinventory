@@ -47,8 +47,8 @@ namespace Toolkid.UIGrid {
             return new Vector2Int(newX, newY);
         }
         public static Vector2Int RotateClockwise(this Vector2Int cell) {
-            int newX = -cell.y;
-            int newY = cell.x;
+            int newX = cell.y;
+            int newY = -cell.x;
             return new Vector2Int(newX, newY);
         }
     }

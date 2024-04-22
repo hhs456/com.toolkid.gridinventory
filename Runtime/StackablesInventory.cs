@@ -11,22 +11,23 @@ using UnityEngine.UI;
 
 public class StackablesInventory : MonoBehaviour, IPageable
 {
+    [SerializeField] protected GridRegion gridSystem;
+    [SerializeField] protected GameObject slotPrefab;
+    [SerializeField] protected Vector2Int pageSize;
+    [SerializeField] protected int count;
+    [SerializeField] protected int currentPage;
+    [SerializeField] protected int pageCount;    
+    [SerializeField] protected bool isLoop;
+
+    private Stackables[] stackables;
+    private List<SlotData> slots = new List<SlotData>();
+
     public GridRegion GridSystem { get => gridSystem; }
     public int CurrentPage { get => currentPage; set => currentPage = value; }
     public Vector2Int PageSize { get => pageSize; set => pageSize = value; }
     public int PageCount { get => pageCount; set => pageCount = value; }
     public bool IsLoop { get => isLoop; set => isLoop = value; }
 
-    [SerializeField] protected int count;
-    [SerializeField] protected int currentPage;
-    [SerializeField] protected int pageCount;
-    [SerializeField] protected Vector2Int pageSize;
-    [SerializeField] protected bool isLoop;
-
-    [SerializeField, FormerlySerializedAs("m_GridSystem")] protected GridRegion gridSystem;
-    [SerializeField, FormerlySerializedAs("m_SlotPrefab")] protected GameObject slotPrefab;
-    Stackables[] stackables;
-    List<SlotData> slots = new List<SlotData>();
 
     // Must be Start(), because the size of adaptive canvas initialized on enabled.
     public void Start() {        
@@ -53,6 +54,9 @@ public class StackablesInventory : MonoBehaviour, IPageable
         }        
     }
 
+    /// <summary>
+    /// Goes to the next page in the inventory.
+    /// </summary>
     public void NextPage() {
         currentPage++;
         if (currentPage > pageCount) {
@@ -72,6 +76,10 @@ public class StackablesInventory : MonoBehaviour, IPageable
             }
         }
     }
+
+    /// <summary>
+    /// Goes to the previous page in the inventory.
+    /// </summary>
     public void PrevPage() {
         currentPage--;
         if (currentPage < 0) {
