@@ -92,7 +92,7 @@ public class InventoryManager : MonoBehaviour {
                 mask.SetSkin(true);
                 int order = GridRegion.GetOrder(index, mask.NativeCell);
                 slots[order].SetData(Color.gray);
-                slots[order].SetData(center);
+                slots[order].Build(center);
             }
         }
     }

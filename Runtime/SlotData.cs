@@ -4,16 +4,20 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [Serializable]
-public class SlotData {
+public class SlotData : ITimeLog {
     [SerializeField] private Texture originTexture;
     [SerializeField] private Color originColor;
     [SerializeField, FormerlySerializedAs("m_Image")] private RawImage image;
     [SerializeField] private bool hasUsed = false;
     [SerializeField] private int centerIndex = -1;
+    public DateTime firstTime;
+    public DateTime finalTime;
 
     public RawImage Image { get => image; private set => image = value; }
-
     public bool HasUsed { get => hasUsed; private set => hasUsed = value; }
+    public DateTime FirstTime { get => firstTime; set => firstTime = value; }
+    public DateTime FinalTime { get => finalTime; set => finalTime = value; }
+    public int CenterIndex { get => centerIndex; set => centerIndex = value; }
 
     public SlotData (RawImage image) {
         Image = image;
@@ -34,8 +38,29 @@ public class SlotData {
         Image.texture = skin;
     }
 
-    public void SetData(int center) {
+    public void Build(int center) {
         HasUsed = true;
         centerIndex = center;
+        FirstTime = DateTime.Now;
+        FinalTime = FirstTime;
     }
+
+    public void Store(int center) {
+        if (hasUsed) {
+            centerIndex = center;
+            FinalTime = DateTime.Now;
+        }
+        else {
+            Debug.LogWarning("`SlotData` has not used.");
+        }
+    }
+    public void Clear(int index) {
+        HasUsed = false;
+        centerIndex = -1;
+    }
+}
+
+public interface ITimeLog {
+    DateTime FirstTime { get; set; }
+    DateTime FinalTime { get; set; }
 }

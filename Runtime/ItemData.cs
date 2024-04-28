@@ -1,14 +1,15 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 namespace Toolkid.UIGrid {
     [Serializable]
     public abstract class ItemData
     {
-        [SerializeField] protected int m_ID = -1;
-        [SerializeField] protected string m_Name = string.Empty;
-        [SerializeField] protected string m_Tooltip = string.Empty;
-        public int ID { get => m_ID; set => m_ID = value; }
-        public string Name { get => m_Name; set => m_Name = value; }
-        public string Toolkit { get => m_Tooltip; set => m_Tooltip = value; }
+        [SerializeField, FormerlySerializedAs("m_ID")] protected int index = -1;
+        [SerializeField, FormerlySerializedAs("m_Name")] protected string name = string.Empty;
+        [SerializeField, FormerlySerializedAs("m_Tooltip")] protected string tooltip = string.Empty;
+        public int Index { get => index; set => index = value; }
+        public string Name { get => name; set => name = value; }
+        public string Toolkit { get => tooltip; set => tooltip = value; }
     }
 }
