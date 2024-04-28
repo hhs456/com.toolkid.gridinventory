@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Toolkid.UIGrid;
 using UnityEngine;
+using UnityEngine.Serialization;
 [Serializable]
 public class PlaceablesData : ItemData {
     const int length = 5;
-    [SerializeField] private bool[] m_Sharp = new bool[length * length];
-    public bool[] Sharp { get => m_Sharp; set => m_Sharp = value; }
+    [SerializeField, FormerlySerializedAs("enabled")] private bool[] sharp = new bool[length * length];
+    public bool[] Sharp { get => sharp; set => sharp = value; }
 
     public PlaceablesData() {
-        m_Sharp = new bool[length * length];
+        sharp = new bool[length * length];
     }
 }

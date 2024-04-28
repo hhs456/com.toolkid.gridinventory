@@ -11,7 +11,7 @@ namespace Toolkid.UIGrid {
         public void Initializes() {
             Datas = new Dictionary<int, PlaceablesData>();
             foreach (var data in datas) {
-                Datas.Add(data.ID, data);
+                Datas.Add(data.Index, data);
             }
         }
     }

@@ -41,7 +41,7 @@ namespace Toolkid.UIGrid {
             var pointer = eventData.pointerCurrentRaycast.gameObject;
             if (pointer) {
                 if (pointer.TryGetComponent(out Stackables pointed)) {
-                    if (pointed.Data.ID == objectID) {
+                    if (pointed.Data.Index == objectID) {
 
                     }
                     // Stacks Behaviour

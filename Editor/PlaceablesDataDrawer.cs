@@ -12,24 +12,24 @@ public class PlaceablesDataDrawer : PropertyDrawer
         if (property.isExpanded = EditorGUI.Foldout(arect, property.isExpanded, label)) {
             arect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2f;
             arect.width = EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth;            
-            EditorGUI.PropertyField(arect, property.FindPropertyRelative("m_ID"), new GUIContent("Item ID"));
+            EditorGUI.PropertyField(arect, property.FindPropertyRelative("index"), new GUIContent("Item ID"));
             arect.width *= 2f;
             arect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2f;
-            EditorGUI.PropertyField(arect, property.FindPropertyRelative("m_Name"), new GUIContent("Name"));
+            EditorGUI.PropertyField(arect, property.FindPropertyRelative("name"), new GUIContent("Name"));
             arect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2f;
-            EditorGUI.PropertyField(arect, property.FindPropertyRelative("m_Tooltip"), new GUIContent("Tooltip"));
+            EditorGUI.PropertyField(arect, property.FindPropertyRelative("tooltip"), new GUIContent("Tooltip"));
             arect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2f;
             EditorGUI.LabelField(arect, new GUIContent("Sharp"));
             arect.x += EditorGUIUtility.labelWidth;
             arect.width = 24f;
             arect.height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2f;
-            property.FindPropertyRelative("m_Sharp").arraySize = 25;
+            property.FindPropertyRelative("sharp").arraySize = 25;
             if (property.propertyPath[property.propertyPath.Length - 1] == ']') {
                 EditorGUI.indentLevel--;
             }
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
-                    SerializedProperty slot = property.FindPropertyRelative("m_Sharp").GetArrayElementAtIndex(i * 5 + j);
+                    SerializedProperty slot = property.FindPropertyRelative("sharp").GetArrayElementAtIndex(i * 5 + j);
                     if (i * 5 + j == 12) {
                         slot.boolValue = true;
                     }
