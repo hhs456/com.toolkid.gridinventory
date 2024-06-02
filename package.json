@@ -12,5 +12,9 @@
     "url": "https://github.com/hhs456"
   },
   "type": "tool",
-  "hideInEditor": false
+  "hideInEditor": false,
+  "dependencies": {
+    "com.unity.shadergraph": "7.7.1",
+    "com.unity.render-pipelines.lightweight": "7.7.1"
+  }
 }
