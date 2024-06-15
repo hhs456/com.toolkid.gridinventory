@@ -16,5 +16,13 @@
   "dependencies": {
     "com.unity.shadergraph": "7.7.1",
     "com.unity.render-pipelines.lightweight": "7.7.1"
+  },
+  "scripts": {
+    "commit": "cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
