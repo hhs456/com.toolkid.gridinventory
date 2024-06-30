@@ -15,6 +15,7 @@
   "hideInEditor": false,
   "dependencies": {
     "com.unity.shadergraph": "7.7.1",
-    "com.unity.render-pipelines.lightweight": "7.7.1"
+    "com.unity.render-pipelines.lightweight": "7.7.1",
+    "com.cysharp.unitask": "2.5.4"
   }
 }
