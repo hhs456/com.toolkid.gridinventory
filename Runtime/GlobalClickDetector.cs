@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 namespace Toolkid.UIGrid {
-    public class GlobalClickDetector<T> where T : MonoBehaviour {
+    public class GlobalClickDetector<T> : MonoBehaviour where T : MonoBehaviour {
         T target;
         Predicate<T> match;
         Action action;
@@ -26,7 +26,7 @@ namespace Toolkid.UIGrid {
             DetectAsync().Forget();
 #endif
             if (!enableUniTask) {
-                target.StartCoroutine("Detect");
+                StartCoroutine("Detect");
             }
         }
 
@@ -38,7 +38,7 @@ namespace Toolkid.UIGrid {
             PermanentDetectAsync().Forget();
 #endif
             if (!enableUniTask) {
-                target.StartCoroutine("PermanentDetect");
+                StartCoroutine("PermanentDetect");
             }
         }
 
