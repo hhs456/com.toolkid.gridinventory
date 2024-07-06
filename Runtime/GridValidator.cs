@@ -81,6 +81,11 @@ namespace Toolkid.UIGrid {
             pointerEvent.position = Input.mousePosition;
             List<RaycastResult> raycasts = new List<RaycastResult>();
             EventSystem.current.RaycastAll(pointerEvent, raycasts);
+#if PLATFORM_ANDROID
+            if(raycasts.Exists(r => r.gameObject.transform.parent == transform || r.gameObject == gameObject)) {
+                return;
+            }
+#endif
             if(raycasts.Exists(r => relatives.Contains(r.gameObject))) {
                 return;
             }
