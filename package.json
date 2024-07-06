@@ -1,7 +1,7 @@
 {
   "name": "com.toolkid.uigrid",
   "displayName": "Toolkid.UIGrid",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "unity": "2019.4",
   "description": "This is a toolkit to contorl Grid component.",
   "keywords": [
