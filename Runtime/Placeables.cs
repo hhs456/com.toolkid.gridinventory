@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 namespace Toolkid.UIGrid {
     public class Placeables : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler {
+        public static GameObject Dragging { get; private set; }
         [SerializeField] private GameObject dragging;
         [SerializeField] private RawImage image;
         [SerializeField] private int objectID;
@@ -18,6 +19,7 @@ namespace Toolkid.UIGrid {
 
         public void OnBeginDrag(PointerEventData eventData) {
             dragging = Instantiate(image.gameObject, InventoryManager.Current.Validator.transform.parent);
+            Dragging = dragging;
             Canvas canvas = dragging.AddComponent<Canvas>();
             canvas.overrideSorting = true;
             canvas.sortingOrder = 2;
@@ -47,7 +49,7 @@ namespace Toolkid.UIGrid {
                     // Stacks Behaviour
                 }
             }
-            
+            Dragging = null;
         }
     }
 }

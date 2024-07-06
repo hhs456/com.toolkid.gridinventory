@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 namespace Toolkid.UIGrid {
+    [Serializable]
     public class GridSlotData {
 
         [SerializeField] private int objectID;

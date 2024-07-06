@@ -27,9 +27,9 @@ public class InventoryManager : MonoBehaviour {
     public StackablesInventory Stackables { get => stackables; }
 
     public SlotData[] Slots { get => slots; }
-
-    public event EventHandler<int> SlotDataChanged;
+    
     public event EventHandler<int> SlotPageChanged;
+    public event EventHandler<SlotData> DataChanged;
 
     private void Start() {
         Current = this;
@@ -102,9 +102,21 @@ public class InventoryManager : MonoBehaviour {
     /// </summary>
     /// <param name="cursorPosition">The position in world space.</param>
     public void OnDragging(Vector3 cursorPosition) {
-        Vector2Int gridIndex = GridRegion.GetIndex(cursorPosition);
+        ReviveSlotAt(Validator.Center);
+        Vector2Int gridIndex = GridRegion.GetIndex(cursorPosition);        
         CheckPlaceableAt(gridIndex);
-        Validator.transform.position = GridRegion.GetCellCenterWorld(cursorPosition);
+        Validator.transform.position = GridRegion.GetCellCenterWorld(cursorPosition);        
+        Validator.Center = gridIndex;
+    }
+
+    public void ReviveSlotAt(Vector2Int gridIndex) {        
+        foreach (var mask in Validator.gridDatas) {
+            Vector2Int index = GridRegion.GetIndex(gridIndex, mask.NativeCell);
+            int order = GridRegion.GetOrder(gridIndex, mask.NativeCell);
+            if (GridRegion.Contains(index)) {
+                slots[order].Normalize();
+            }
+        }
     }
 
     /// <summary>
@@ -113,7 +125,7 @@ public class InventoryManager : MonoBehaviour {
     /// <param name="gridIndex">The grid index to check.</param>
     /// <returns>True if the grid index is placeable, false otherwise.</returns>
     public void CheckPlaceableAt(Vector2Int gridIndex) {
-        bool isValid = true;        
+        bool isValid = true;
         foreach (var mask in Validator.gridDatas) {
             Vector2Int index = GridRegion.GetIndex(gridIndex, mask.NativeCell);
             int order = GridRegion.GetOrder(gridIndex, mask.NativeCell);
@@ -121,20 +133,20 @@ public class InventoryManager : MonoBehaviour {
                 isValid = false;
                 mask.SetSkin(false);
             }
-            else if (slots[order].HasUsed) {
-                isValid = false;                
-                mask.SetSkin(true);
-            }
             else {
-                mask.SetSkin(true);
+                if (slots[order].HasUsed) {
+                    slots[order].Normalize();
+                    isValid = false;
+                    mask.SetSkin(true);
+                }
+                else {
+                    slots[order].Normalize();
+                    mask.SetSkin(true);
+                }
             }
-            if (isValid) {
-                Validator.Validates();
-            }
-            else {
-                Validator.Invalidates();
-            }
+            Validator.SetValid(isValid);
         }
+        Validator.ValidatesAt(gridIndex);
     }
 
     public void StopOperating() {
@@ -158,7 +170,7 @@ public class InventoryManager : MonoBehaviour {
                 mask.SetSkin(true);
                 int order = GridRegion.GetOrder(index, mask.NativeCell);
                 slots[order].Build(center, operatedItemId);
-                SlotDataChanged?.Invoke(this, order);
+                DataChanged?.Invoke(this, slots[order]);
                 hasChanged = true;
             }
         }
