@@ -2,20 +2,18 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
+
 namespace Toolkid.UIGrid {
-    public class Placeables : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler {
+    public class Placeables : Stackables, IDragHandler, IBeginDragHandler, IEndDragHandler {
         public static GameObject Dragging { get; private set; }
+      
         [SerializeField] private GameObject dragging;
-        [SerializeField] private RawImage image;
-        [SerializeField] private int objectID;
+        [SerializeField] private RawImage image;        
 
         public event EventHandler<PointerEventData> OnDragBegin;
         public event EventHandler<PointerEventData> OnDragEnd;
-
-        // Only for testing version.
-        public void Initialize(int itemID) {
-            objectID = itemID;
-        }
+       
 
         public void OnBeginDrag(PointerEventData eventData) {
             dragging = Instantiate(image.gameObject, InventoryManager.Current.Validator.transform.parent);
@@ -24,7 +22,7 @@ namespace Toolkid.UIGrid {
             canvas.overrideSorting = true;
             canvas.sortingOrder = 2;
             dragging.transform.localPosition = Vector3.zero;
-            InventoryManager.Current.DoPlaceable(objectID);
+            InventoryManager.Current.DoPlaceable(Index);
             OnDragBegin?.Invoke(this, eventData);
         }
 
@@ -42,12 +40,12 @@ namespace Toolkid.UIGrid {
             OnDragEnd?.Invoke(this, eventData);
             var pointer = eventData.pointerCurrentRaycast.gameObject;
             if (pointer) {
-                if (pointer.TryGetComponent(out Stackables pointed)) {
-                    if (pointed.Data.Index == objectID) {
+                //if (pointer.TryGetComponent(out Stackables pointed)) {
+                //    if (pointed.Data.Index == index) {
 
-                    }
-                    // Stacks Behaviour
-                }
+                //    }
+                //    // Stacks Behaviour
+                //}
             }
             Dragging = null;
         }

@@ -11,22 +11,22 @@ using UnityEngine.UI;
 
 public class StackablesInventory : MonoBehaviour, IPageable
 {
-    [SerializeField] protected GridRegion gridSystem;
+
+    public GridRegion GridSystem { get => gridRegion; }
+    public int CurrentPage { get => currentPage; set => currentPage = value; }
+    public Vector2Int PageSize { get => pageSize; set => pageSize = value; }
+    public int PageCount { get => pageCount; set => pageCount = value; }
+    public bool IsLoop { get => isLoop; set => isLoop = value; }
+
+    [SerializeField, FormerlySerializedAs("gridSystem")] protected GridRegion gridRegion;
     [SerializeField] protected GameObject slotPrefab;
     [SerializeField] protected Vector2Int pageSize;
     [SerializeField] protected int count;
     [SerializeField] protected int currentPage;
     [SerializeField] protected int pageCount;    
     [SerializeField] protected bool isLoop;
-
-    private Stackables[] stackables;
+    
     private List<SlotData> slots = new List<SlotData>();
-
-    public GridRegion GridSystem { get => gridSystem; }
-    public int CurrentPage { get => currentPage; set => currentPage = value; }
-    public Vector2Int PageSize { get => pageSize; set => pageSize = value; }
-    public int PageCount { get => pageCount; set => pageCount = value; }
-    public bool IsLoop { get => isLoop; set => isLoop = value; }
 
 
     // Must be Start(), because the size of adaptive canvas initialized on enabled.
@@ -48,8 +48,7 @@ public class StackablesInventory : MonoBehaviour, IPageable
                 slots[slots.Count - 1].Image.transform.SetParent(transform);
                 slots[slots.Count - 1].Image.transform.position = GridSystem.GetWorldPosition(new Vector2Int(j, i));
                 slots[slots.Count - 1].Image.transform.localScale = Vector3.one;                
-                slots[slots.Count - 1].Image.GetComponent<Stackables>().Initialize(j); // `j` is order in array, only for testing version.
-                slots[slots.Count - 1].Image.GetComponent<Placeables>().Initialize(j);                
+                slots[slots.Count - 1].Image.GetComponent<Placeables>().Initialize(j); // `j` is order in array, only for testing version.               
             }
         }        
     }

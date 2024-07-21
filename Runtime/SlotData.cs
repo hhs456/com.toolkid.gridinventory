@@ -5,6 +5,13 @@ using UnityEngine.UI;
 
 [Serializable]
 public class SlotData : ITimeLog {
+    public int ItemIndex { get => itemIndex; private set => itemIndex = value; }
+    public RawImage Image { get => image; private set => image = value; }
+    public bool HasUsed { get => hasUsed; private set => hasUsed = value; }
+    public DateTime FirstTime { get => firstTime; set => firstTime = value; }
+    public DateTime FinalTime { get => finalTime; set => finalTime = value; }
+    public int CenterIndex { get => centerIndex; set => centerIndex = value; }
+
     [SerializeField] private int itemIndex = -1;
     [SerializeField] private Texture originTexture;
     [SerializeField] private Color originColor;
@@ -13,12 +20,7 @@ public class SlotData : ITimeLog {
     [SerializeField] private int centerIndex = -1;
     public DateTime firstTime;
     public DateTime finalTime;
-    public int ItemIndex { get => itemIndex; private set => itemIndex = value; }
-    public RawImage Image { get => image; private set => image = value; }
-    public bool HasUsed { get => hasUsed; private set => hasUsed = value; }
-    public DateTime FirstTime { get => firstTime; set => firstTime = value; }
-    public DateTime FinalTime { get => finalTime; set => finalTime = value; }
-    public int CenterIndex { get => centerIndex; set => centerIndex = value; }
+
 
     public SlotData (RawImage image) {
         Image = image;
