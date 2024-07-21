@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 [Serializable]
 public class SlotData : ITimeLog {
-    public int ItemIndex { get => itemIndex; private set => itemIndex = value; }
+    public string ItemId { get => itemId; private set => itemId = value; }
     public RawImage Image { get => image; private set => image = value; }
     public bool HasUsed { get => hasUsed; private set => hasUsed = value; }
     public DateTime FirstTime { get => firstTime; set => firstTime = value; }
     public DateTime FinalTime { get => finalTime; set => finalTime = value; }
     public int CenterIndex { get => centerIndex; set => centerIndex = value; }
 
-    [SerializeField] private int itemIndex = -1;
+    [SerializeField, FormerlySerializedAs("itemIndex")] private string itemId = string.Empty;
     [SerializeField] private Texture originTexture;
     [SerializeField] private Color originColor;
     [SerializeField, FormerlySerializedAs("m_Image")] private RawImage image;
@@ -43,8 +43,8 @@ public class SlotData : ITimeLog {
         }
     }
 
-    public void SetData(int itemIndex) {
-        ItemIndex = itemIndex;
+    public void SetData(string itemId) {
+        ItemId = itemId;
     }
 
     public void SetData(Color color) {
@@ -55,10 +55,10 @@ public class SlotData : ITimeLog {
         Image.texture = skin;
     }
 
-    public void Build(int center, int item) {
+    public void Build(int center, string itemId) {
         HasUsed = true;
         centerIndex = center;
-        ItemIndex = item;
+        ItemId = itemId;
         FirstTime = DateTime.Now;
         FinalTime = FirstTime;
     }

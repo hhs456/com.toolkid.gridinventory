@@ -28,9 +28,9 @@ namespace Toolkid.UIGrid {
         public event EventHandler<int> Full;
 
         // Only for testing version.
-        public void Initialize(int index) {
-            ItemData.Index = index;
-            ItemData.Name = PlaceablesDatas.Datas[index].Name;
+        public void Initialize(string Identifier) {
+            ItemData.Identifier = Identifier;
+            ItemData.Name = PlaceablesDatas.Datas[Identifier].Name;
             NameText.text = ItemData.Name;
             AmountText.text = stackablesData.Amount.ToString();
         }

@@ -19,7 +19,7 @@ public class InventoryManager : MonoBehaviour {
     [SerializeField] private int pageSize = 3;
     [SerializeField] private bool hasChanged = false;
 
-    [SerializeField] private int operatedItemId = -1;
+    [SerializeField] private string operatedItemId = string.Empty;
 
     public static InventoryManager Current { get; set; }
     public GridRegion GridRegion { get => gridRegion; }
@@ -150,12 +150,12 @@ public class InventoryManager : MonoBehaviour {
     }
 
     public void StopOperating() {
-        operatedItemId = -1;
+        operatedItemId = string.Empty;
     }
 
-    public void DoPlaceable(int objectID) {
-        operatedItemId = objectID;
-        Validator.Preview(PlaceablesDatas.Datas[objectID].Sharp);
+    public void DoPlaceable(string itemID) {
+        operatedItemId = itemID;
+        Validator.Preview(PlaceablesDatas.Datas[itemID].Sharp);
     }
 
     public void PlacesAt(Vector3 position) {

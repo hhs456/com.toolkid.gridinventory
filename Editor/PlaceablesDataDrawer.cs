@@ -11,7 +11,7 @@ namespace Toolkid.UIGrid {
             if (property.isExpanded = EditorGUI.Foldout(arect, property.isExpanded, label)) {
                 arect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2f;
                 arect.width = EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth;
-                EditorGUI.PropertyField(arect, property.FindPropertyRelative("index"), new GUIContent("Item ID"));
+                EditorGUI.PropertyField(arect, property.FindPropertyRelative("identifier"), new GUIContent("Item ID"));
                 arect.width *= 2f;
                 arect.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2f;
                 EditorGUI.PropertyField(arect, property.FindPropertyRelative("name"), new GUIContent("Name"));

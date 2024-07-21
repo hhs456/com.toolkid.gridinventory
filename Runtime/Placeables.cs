@@ -22,7 +22,7 @@ namespace Toolkid.UIGrid {
             canvas.overrideSorting = true;
             canvas.sortingOrder = 2;
             dragging.transform.localPosition = Vector3.zero;
-            InventoryManager.Current.DoPlaceable(Index);
+            InventoryManager.Current.DoPlaceable(Identifier);
             OnDragBegin?.Invoke(this, eventData);
         }
 

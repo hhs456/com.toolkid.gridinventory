@@ -30,7 +30,7 @@ public class StackablesInventory : MonoBehaviour, IPageable
 
 
     // Must be Start(), because the size of adaptive canvas initialized on enabled.
-    public void Start() {        
+    public void Start() {
         //stackables = GetComponentsInChildren<Stackables>();
         //foreach (Stackables stackable in stackables) {
         //    stackable.Initialize();
@@ -47,10 +47,10 @@ public class StackablesInventory : MonoBehaviour, IPageable
                 slots[slots.Count - 1].Image.GetComponent<RectTransform>().sizeDelta = GridSystem.Grid.Get2DSize() * 0.95f;
                 slots[slots.Count - 1].Image.transform.SetParent(transform);
                 slots[slots.Count - 1].Image.transform.position = GridSystem.GetWorldPosition(new Vector2Int(j, i));
-                slots[slots.Count - 1].Image.transform.localScale = Vector3.one;                
-                slots[slots.Count - 1].Image.GetComponent<Placeables>().Initialize(j); // `j` is order in array, only for testing version.               
+                slots[slots.Count - 1].Image.transform.localScale = Vector3.one;
+                slots[slots.Count - 1].Image.GetComponent<Placeables>().Initialize("Seed_" + (j + 1).ToString()); // `j` is order in array, only for testing version.               
             }
-        }        
+        }
     }
 
     /// <summary>
