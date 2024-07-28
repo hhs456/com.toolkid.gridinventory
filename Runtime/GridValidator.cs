@@ -10,30 +10,34 @@ namespace Toolkid.UIGrid {
     /// Manages the validation and placement of grid-based objects in the Unity environment.
     /// </summary>
     public class GridValidator : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
-        [SerializeField] private InventoryManager inventoryManager;
-        [FormerlySerializedAs("gridSystem") , SerializeField] private GridRegion gridRegion;
-        [SerializeField] private int sharpSize = 5;
-        [SerializeField] private Vector2Int center;
-        [SerializeField] private GameObject prefab;
-        [SerializeField] private GameObject[] relatives;
-        [SerializeField] private bool isValid = false;
+
+        public static GridValidator Main { get; private set; }
         public GameObject Prefab { get => prefab; set => prefab = value; }
         public Vector2Int Center { get => center; set => center = value; }
 
         public bool IsValid { get => isValid; }
 
-        [SerializeField] public readonly List<GridSlotData> gridDatas = new List<GridSlotData>();
-                
-        private bool isHovering = false;
+        public readonly List<GridSlotData> gridDatas = new List<GridSlotData>();
 
-        public event EventHandler<SlotData> Validated;
-        public event EventHandler<SlotData> Invalidated;        
+        public event EventHandler<ItemSlot> Validated;
+        public event EventHandler<ItemSlot> Invalidated;
+
+        [SerializeField] private InventoryManager inventory;
+        [FormerlySerializedAs("gridSystem"), SerializeField] private GridRegion gridRegion;
+        [SerializeField] private int sharpSize = 5;
+        [SerializeField] private Vector2Int center;
+        [SerializeField] private GameObject prefab;
+        [SerializeField] private GameObject[] relatives;
+        [SerializeField] private bool isValid = false;
+        private bool isHovering = false;
 
         /// <summary>
         /// Initializes the grid validator component.
         /// </summary>
-        public void Initializes() {
-            GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridRegion.Grid.cellSize;
+        public void Initializes(InventoryManager inventory) {
+            Main = this;
+            this.inventory = inventory;
+            GetComponent<RectTransform>().sizeDelta = inventory.GridRegion.Grid.cellSize;            
         }
 
         /// <summary>
@@ -42,19 +46,19 @@ namespace Toolkid.UIGrid {
         /// <param name="Sharp">An array indicating the shape of the grid.</param>
         public void Preview(bool[] Sharp) {
             gridDatas.Clear();
-            GetComponent<Grid>().cellSize = InventoryManager.Current.GridRegion.Grid.cellSize;
+            GetComponent<Grid>().cellSize = inventory.GridRegion.Grid.cellSize;
             for (int i = 0; i < 25; i++) {
                 if (Sharp[i]) {
                     gridDatas.Add(new GridSlotData(Instantiate(prefab).GetComponent<RawImage>()));
                     int lastIndex = gridDatas.Count - 1;
                     gridDatas[lastIndex].Skin.color = Color.clear; // Detecting pointer only
                     gridDatas[lastIndex].Skin.transform.localPosition = Vector3.zero;
-                    gridDatas[lastIndex].Skin.GetComponent<RectTransform>().sizeDelta = InventoryManager.Current.GridRegion.Grid.Get2DSize();
+                    gridDatas[lastIndex].Skin.GetComponent<RectTransform>().sizeDelta = inventory.GridRegion.Grid.Get2DSize();
                     int midtern = sharpSize * sharpSize / 2;
                     Vector2Int cell = new Vector2Int((i % sharpSize - midtern % sharpSize), -(i / sharpSize - midtern / sharpSize));
                     gridDatas[lastIndex].SetCell(cell);
-                    gridDatas[lastIndex].Skin.transform.SetParent(InventoryManager.Current.Validator.transform);
-                    gridDatas[lastIndex].Skin.transform.localPosition = InventoryManager.Current.Validator.GetComponent<Grid>().CellToLocal(new Vector3Int(cell.x, cell.y, 0));
+                    gridDatas[lastIndex].Skin.transform.SetParent(inventory.Validator.transform);
+                    gridDatas[lastIndex].Skin.transform.localPosition = inventory.Validator.GetComponent<Grid>().CellToLocal(new Vector3Int(cell.x, cell.y, 0));
                     gridDatas[lastIndex].Skin.transform.localScale = Vector3.one;
                 }
             }
@@ -67,7 +71,7 @@ namespace Toolkid.UIGrid {
         public void PlaceOn(Vector2Int index) {
             Center = index;
             foreach (GridSlotData cell in gridDatas) {                
-                cell.InventoryIndex = gridRegion.GetIndex(index, cell.NativeCell);
+                cell.ArrayIndex = gridRegion.GetIndex(index, cell.NativeCell);
             }
             var anyClick = new GlobalClickDetector<GridValidator>(this, d => !d.isHovering, TryCancel);
             anyClick.Forget();
@@ -96,7 +100,7 @@ namespace Toolkid.UIGrid {
         /// Cancels the current grid placement operation.
         /// </summary>
         public void Cancel() {
-            InventoryManager.Current.ReviveSlotAt(Center);
+            inventory.ReviveSlotAt(Center);
             foreach (GridSlotData cell in gridDatas) {
                 DestroyImmediate(cell.Skin.gameObject);
             }
@@ -108,12 +112,12 @@ namespace Toolkid.UIGrid {
         /// Rotates the grid validator clockwise.
         /// </summary>
         public void Rotate() {
-            InventoryManager.Current.ReviveSlotAt(Center);
+            inventory.ReviveSlotAt(Center);
             foreach (GridSlotData cell in gridDatas) {
                 cell.NativeCell = cell.NativeCell.RotateClockwise();
             }
             transform.Rotate(0, 0, -90); // it would be rotate clockwise as `-`
-            inventoryManager.CheckPlaceableAt(Center);
+            inventory.CheckPlaceableAt(Center);
         }
 
         public void SetValid(bool isValid) {
@@ -131,10 +135,10 @@ namespace Toolkid.UIGrid {
                     mask.SetSkin(false);
                 }
                 else if (isValid) { 
-                    Validated?.Invoke(this, InventoryManager.Current.Slots[order]);
+                    Validated?.Invoke(this, inventory.Slots[order]);
                 }
                 else {
-                    Invalidated?.Invoke(this, InventoryManager.Current.Slots[order]);
+                    Invalidated?.Invoke(this, inventory.Slots[order]);
                 }
             }
         }

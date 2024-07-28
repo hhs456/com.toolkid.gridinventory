@@ -26,7 +26,7 @@ public class StackablesInventory : MonoBehaviour, IPageable
     [SerializeField] protected int pageCount;    
     [SerializeField] protected bool isLoop;
     
-    private List<SlotData> slots = new List<SlotData>();
+    private List<ItemSlot> slots = new List<ItemSlot>();
 
 
     // Must be Start(), because the size of adaptive canvas initialized on enabled.
@@ -41,7 +41,7 @@ public class StackablesInventory : MonoBehaviour, IPageable
         int id = currentPage * PageCount + 1;
         for (int i = 0; i < GridSystem.GridCount.y; i++) {
             for (int j = 0; j < count; j++) {
-                SlotData slot = new SlotData(Instantiate(slotPrefab).GetComponent<RawImage>());
+                ItemSlot slot = new ItemSlot(Instantiate(slotPrefab).GetComponent<RawImage>());
                 slots.Add(slot);
                 slots[slots.Count - 1].Image.transform.localPosition = Vector3.zero;
                 slots[slots.Count - 1].Image.GetComponent<RectTransform>().sizeDelta = GridSystem.Grid.Get2DSize() * 0.95f;
