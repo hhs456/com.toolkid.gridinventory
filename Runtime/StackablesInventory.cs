@@ -48,7 +48,8 @@ public class StackablesInventory : MonoBehaviour, IPageable
                 slots[slots.Count - 1].Image.transform.SetParent(transform);
                 slots[slots.Count - 1].Image.transform.position = GridSystem.GetWorldPosition(new Vector2Int(j, i));
                 slots[slots.Count - 1].Image.transform.localScale = Vector3.one;
-                slots[slots.Count - 1].Image.GetComponent<Placeables>().Initialize("Seed_" + (j + 1).ToString()); // `j` is order in array, only for testing version.               
+                slots[slots.Count - 1].Image.transform.GetChild(0).GetComponent<RawImage>().texture = Resources.Load<Texture>("plant_" + (j + 1).ToString());
+                slots[slots.Count - 1].Image.GetComponent<Placeables>().Initialize("plant_" + (j + 1).ToString()); // `j` is order in array, only for testing version.               
             }
         }
     }

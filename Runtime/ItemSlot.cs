@@ -50,7 +50,7 @@ namespace Toolkid.UIGrid {
             }
             else {
                 // Get item image with itemIndex.
-                Image.color = Color.blue;
+                Image.color = originColor;
             }
         }
 
