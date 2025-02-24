@@ -9,9 +9,9 @@ namespace Toolkid.UIGrid {
     /// <summary>
     /// Manages the validation and placement of grid-based objects in the Unity environment.
     /// </summary>
-    public class GridValidator : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
+    public class PlaceValidator : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
 
-        public static GridValidator Main { get; private set; }
+        public static PlaceValidator Main { get; private set; }
         public GameObject Prefab { get => prefab; set => prefab = value; }
         public Vector2Int Center { get => center; set => center = value; }
 
@@ -73,7 +73,7 @@ namespace Toolkid.UIGrid {
             foreach (GridSlotData cell in gridDatas) {                
                 cell.ArrayIndex = gridRegion.GetIndex(index, cell.NativeCell);
             }
-            var anyClick = new GlobalClickDetector<GridValidator>(this, d => !d.isHovering, TryCancel);
+            var anyClick = new GlobalClickDetector<PlaceValidator>(this, d => !d.isHovering, TryCancel);
             anyClick.Forget();
         }
 

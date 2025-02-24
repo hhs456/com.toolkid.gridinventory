@@ -10,7 +10,7 @@ namespace Toolkid.UIGrid {
     public class InventoryManager : MonoBehaviour, IPageable {
         public static InventoryManager Current { get; set; }
         public GridRegion GridRegion { get => gridRegion; }
-        public GridValidator Validator { get => validator; }
+        public PlaceValidator Validator { get => validator; }
         public StackablesInventory Stackables { get => stackables; }
 
         public ItemSlot[] Slots { get => slots; }
@@ -22,7 +22,7 @@ namespace Toolkid.UIGrid {
         public event EventHandler<int> SlotPageChanged;
         public event EventHandler<ItemSlot> DataChanged;
 
-        [SerializeField] private GridValidator validator;
+        [SerializeField] private PlaceValidator validator;
         [SerializeField, FormerlySerializedAs("gridSystem")] private GridRegion gridRegion;
         [SerializeField] private GameObject slotPrefab;
         [SerializeField] private StackablesInventory stackables;
@@ -108,7 +108,7 @@ namespace Toolkid.UIGrid {
         /// Called when the mouse hovers over a position in the grid.
         /// </summary>
         /// <param name="cursorPosition">The position in world space.</param>
-        public void OnDragging(Vector3 cursorPosition) {
+        public void OnDragging(Vector3 cursorPosition) {            
             ReviveSlotAt(Validator.Center);
             Vector2Int gridIndex = GridRegion.GetIndex(cursorPosition);
             CheckPlaceableAt(gridIndex);
