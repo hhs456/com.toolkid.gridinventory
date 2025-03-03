@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 namespace Toolkid.UIGrid {
 
     public interface IItemData {
@@ -14,10 +15,16 @@ namespace Toolkid.UIGrid {
         public string Identifier { get => identifier; set => identifier = value; }
         public string Name { get => name; set => name = value; }
         public string Toolkit { get => tooltip; set => tooltip = value; }
+        public RawImage RawImage { get => rawImage; set => rawImage = value; }
 
-        [SerializeField, FormerlySerializedAs("m_ID"), FormerlySerializedAs("identifier")] protected string identifier = string.Empty;
-        [SerializeField, FormerlySerializedAs("m_Name")] protected string name = string.Empty;
-        [SerializeField, FormerlySerializedAs("m_Tooltip")] protected string tooltip = string.Empty;
+        [SerializeField, FormerlySerializedAs("m_ID"), FormerlySerializedAs("identifier")]
+        protected string identifier = string.Empty;
+        [SerializeField, FormerlySerializedAs("m_Name")]
+        protected string name = string.Empty;
+        [SerializeField, FormerlySerializedAs("m_Tooltip")]
+        protected string tooltip = string.Empty;
+        [SerializeField]
+        private RawImage rawImage = null;
 
 
         public ItemData(string identifier = "", string name = "", string toolkid = "") {

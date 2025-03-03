@@ -38,7 +38,7 @@ public class StackablesInventory : MonoBehaviour, IPageable
         GridSystem.Initializes(pageSize);
         PageCount = count / (pageSize.x * pageSize.y);
         slots.Clear();
-        int id = currentPage * PageCount + 1;
+        string[] ids = new string[] { "Generalitem_Common_Agriculture_Normal_Cashseed_002", "Generalitem_Common_Agriculture_Normal_Cashseed_001", "Generalitem_Common_Agriculture_Normal_Cashseed_005", "Generalitem_Common_Agriculture_Normal_Cashseed_007" };
         for (int i = 0; i < GridSystem.GridCount.y; i++) {
             for (int j = 0; j < count; j++) {
                 ItemSlot slot = new ItemSlot(Instantiate(slotPrefab).GetComponent<RawImage>());
@@ -48,10 +48,10 @@ public class StackablesInventory : MonoBehaviour, IPageable
                 slots[slots.Count - 1].Image.transform.SetParent(transform);
                 slots[slots.Count - 1].Image.transform.position = GridSystem.GetWorldPosition(new Vector2Int(j, i));
                 slots[slots.Count - 1].Image.transform.localScale = Vector3.one;
-                slots[slots.Count - 1].Image.transform.GetChild(0).GetComponent<RawImage>().texture = Resources.Load<Texture>("plant_" + (j + 1).ToString());
-                slots[slots.Count - 1].Image.GetComponent<Placeables>().Initialize("plant_" + (j + 1).ToString()); // `j` is order in array, only for testing version.               
+                slots[slots.Count - 1].Image.transform.GetChild(0).GetComponent<RawImage>().texture = Resources.Load<Texture>(ids[j]);
+                slots[slots.Count - 1].Image.GetComponent<Placeables>().Initialize(ids[j]);
             }
-        }
+        }      
     }
 
     /// <summary>
