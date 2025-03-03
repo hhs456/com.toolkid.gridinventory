@@ -21,6 +21,7 @@ namespace Toolkid.UIGrid {
 
         public event EventHandler<int> SlotPageChanged;
         public event EventHandler<ItemSlot> DataChanged;
+        public event EventHandler<int> SlotChanged;
 
         [SerializeField] private PlaceValidator validator;
         [SerializeField, FormerlySerializedAs("gridSystem")] private GridRegion gridRegion;
@@ -179,6 +180,7 @@ namespace Toolkid.UIGrid {
                     int order = GridRegion.GetOrder(index, mask.NativeCell);
                     slots[order].Build(operatedItemId);
                     DataChanged?.Invoke(this, slots[order]);
+                    SlotChanged?.Invoke(this, order);
                     hasChanged = true;
                 }
             }
