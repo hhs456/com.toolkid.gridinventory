@@ -178,7 +178,7 @@ namespace Toolkid.UIGrid {
                 if (Validator.IsValid) {
                     mask.SetSkin(true);
                     int order = GridRegion.GetOrder(index, mask.NativeCell);
-                    slots[order].Build(operatedItemId);
+                    slots[order].Build(center, operatedItemId);
                     DataChanged?.Invoke(this, slots[order]);
                     SlotChanged?.Invoke(this, order);
                     hasChanged = true;
@@ -186,6 +186,15 @@ namespace Toolkid.UIGrid {
             }
         }
 
+        public void RemoveAt(int index) {
+            for(int i =0; i< slots.Length;i++) {
+                if (slots[i].SlotIndex == index) {
+                    slots[i].Reset();
+                    DataChanged?.Invoke(this, slots[i]);
+                    SlotChanged?.Invoke(this, i);
+                }
+            }
+        }
         public void Places() {
             PlacesAt(Validator.Center);
             Validator.Cancel();

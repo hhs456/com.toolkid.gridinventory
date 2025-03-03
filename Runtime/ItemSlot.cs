@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Networking.Types;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 namespace Toolkid.UIGrid {
@@ -16,14 +17,16 @@ namespace Toolkid.UIGrid {
         DateTime FinalTime { get; set; }
     }
     [Serializable]
-    public class ItemSlot : IItemSlot,  ITimeLog {
+    public class ItemSlot : IItemSlot,  ITimeLog {        
+        public int SlotIndex { get => slotIndex; set => slotIndex = value; }
         public string ItemId { get => itemId; set => itemId = value; }
         public RawImage Image { get => image; set => image = value; }
         public bool HasUsed { get => hasUsed; protected set => hasUsed = value; }
         public DateTime FirstTime { get => firstTime; set => firstTime = value; }
         public DateTime FinalTime { get => finalTime; set => finalTime = value; }
-        
 
+        [SerializeField]
+        private int slotIndex;
         [SerializeField, FormerlySerializedAs("itemIndex")] private string itemId = string.Empty;
         [SerializeField] private Texture originTexture;
         [SerializeField] private Color originColor;
@@ -40,8 +43,11 @@ namespace Toolkid.UIGrid {
         }
 
         public void Reset() {
+            slotIndex = -1;
+            itemId = string.Empty;
             Image.texture = originTexture;
             Image.color = originColor;
+            hasUsed = false;
         }
 
         public void Normalize() {
@@ -66,8 +72,9 @@ namespace Toolkid.UIGrid {
             Image.texture = skin;
         }
 
-        public void Build(string itemId) {
+        public void Build(int slotIndex, string itemId) {
             HasUsed = true;            
+            SlotIndex = slotIndex;
             ItemId = itemId;
             FirstTime = DateTime.Now;
             FinalTime = FirstTime;
