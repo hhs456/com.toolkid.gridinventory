@@ -7,14 +7,14 @@ namespace Toolkid.UIGrid {
     public interface IItemData {
         string Identifier { get; }        
         string Name { get; }
-        string Toolkit { get; }
+        string Tooltip { get; }
     }
 
     [Serializable]
     public class ItemData : IItemData {
         public string Identifier { get => identifier; set => identifier = value; }
         public string Name { get => name; set => name = value; }
-        public string Toolkit { get => tooltip; set => tooltip = value; }
+        public string Tooltip { get => tooltip; set => tooltip = value; }
         public RawImage RawImage { get => rawImage; set => rawImage = value; }
 
         [SerializeField, FormerlySerializedAs("m_ID"), FormerlySerializedAs("identifier")]
@@ -30,13 +30,13 @@ namespace Toolkid.UIGrid {
         public ItemData(string identifier = "", string name = "", string toolkid = "") {
             Identifier = identifier;
             Name = name;
-            Toolkit = toolkid;
+            Tooltip = toolkid;
         }
 
         public void Initialise(string identifier = "", string name = "", string toolkid = "") {
             Identifier = identifier;
             Name = name;
-            Toolkit = toolkid;
+            Tooltip = toolkid;
         }
     }
 }
