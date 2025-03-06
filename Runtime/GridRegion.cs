@@ -71,6 +71,15 @@ namespace Toolkid.UIGrid {
         }
 
         /// <summary>
+        /// Gets the order value for the specified index.
+        /// </summary>
+        /// <param name="index">The index of the grid.</param>
+        /// <returns>The order value.</returns>
+        public int GetOrder(Vector2Int index) {
+            return index.GetIndex(Vector2Int.zero, startCorner).ToInt(GridCount.x);
+        }
+
+        /// <summary>
         /// Gets the order value for the specified index and relative position.
         /// </summary>
         /// <param name="index">The index of the grid.</param>

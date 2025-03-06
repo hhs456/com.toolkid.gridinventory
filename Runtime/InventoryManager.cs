@@ -172,7 +172,7 @@ namespace Toolkid.UIGrid {
         }
 
         public void PlacesAt(Vector2Int index) {
-            int center = GridRegion.GetOrder(index, Vector2Int.zero);
+            int center = GridRegion.GetOrder(index);
             placedItems.Add(center, operatedItemId);
             foreach (var mask in Validator.gridDatas) {
                 if (Validator.IsValid) {
@@ -187,8 +187,9 @@ namespace Toolkid.UIGrid {
         }
 
         public void RemoveAt(int index) {
-            for(int i =0; i< slots.Length;i++) {
+            for(int i = 0; i< slots.Length;i++) {
                 if (slots[i].SlotIndex == index) {
+                    placedItems.Remove(index);
                     slots[i].Reset();
                     DataChanged?.Invoke(this, slots[i]);
                     SlotChanged?.Invoke(this, i);
